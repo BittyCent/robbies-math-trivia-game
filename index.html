@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robbie's Math Trivia Game</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.8rem;
+      color: #fff;
+      text-shadow: 3px 3px 0 #ff6b6b, 6px 6px 0 rgba(0,0,0,0.1);
+      margin-bottom: 10px;
+      text-align: center;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
+    }
+
+    .stars-bar {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+      letter-spacing: 4px;
+    }
+
+    .game-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      width: 100%;
+      max-width: 700px;
+    }
+
+    /* Streak / Progress row */
+    .status-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.25);
+      border: 3px solid rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 8px 18px;
+      color: #fff;
+      font-weight: 900;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge span { font-size: 1.3rem; }
+
+    /* Question card */
+    .question-card {
+      background: #fff;
+      border-radius: 28px;
+      padding: 36px 40px;
+      text-align: center;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+      width: 100%;
+      position: relative;
+    }
+
+    .question-text {
+      font-family: 'Fredoka One', cursive;
+      font-size: 3.5rem;
+      color: #4a4a8a;
+      margin-bottom: 28px;
+      line-height: 1.1;
+    }
+
+    .choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .choice-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      padding: 18px 10px;
+      border: 4px solid transparent;
+      border-radius: 18px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+      color: #fff;
+      box-shadow: 0 6px 0 rgba(0,0,0,0.18);
+    }
+
+    .choice-btn:nth-child(1) { background: linear-gradient(135deg, #f7971e, #ffd200); }
+    .choice-btn:nth-child(2) { background: linear-gradient(135deg, #11998e, #38ef7d); }
+    .choice-btn:nth-child(3) { background: linear-gradient(135deg, #ee0979, #ff6a00); }
+    .choice-btn:nth-child(4) { background: linear-gradient(135deg, #4776e6, #8e54e9); }
+
+    .choice-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 0 rgba(0,0,0,0.18); }
+    .choice-btn:active { transform: translateY(2px); box-shadow: 0 3px 0 rgba(0,0,0,0.18); }
+
+    .choice-btn.correct {
+      animation: correctFlash 0.5s forwards;
+      border-color: #00ff88;
+    }
+    .choice-btn.wrong {
+      animation: wrongShake 0.4s forwards;
+      border-color: #ff2244;
+      opacity: 0.5;
+    }
+
+    @keyframes correctFlash {
+      0%   { transform: scale(1); }
+      40%  { transform: scale(1.12); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes wrongShake {
+      0%,100% { transform: translateX(0); }
+      25%     { transform: translateX(-8px); }
+      75%     { transform: translateX(8px); }
+    }
+
+    /* Feedback message */
+    .feedback {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.7rem;
+      min-height: 2.4rem;
+      margin-top: 20px;
+      color: #4a4a8a;
+      transition: opacity 0.3s;
+    }
+
+    /* Candy collection */
+    .collection-card {
+      background: rgba(255,255,255,0.18);
+      border: 3px solid rgba(255,255,255,0.4);
+      border-radius: 24px;
+      padding: 20px 28px;
+      width: 100%;
+      color: #fff;
+    }
+
+    .collection-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    .candy-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .candy-item {
+      background: rgba(255,255,255,0.2);
+      border-radius: 16px;
+      padding: 10px 8px;
+      text-align: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .candy-item .icon { font-size: 2rem; display: block; margin-bottom: 4px; }
+    .candy-item .count {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      display: block;
+      color: #fff;
+    }
+    .candy-item .label { font-size: 0.8rem; opacity: 0.9; }
+
+    /* Progress to cake */
+    .cake-progress {
+      margin-top: 14px;
+      text-align: center;
+    }
+
+    .cake-progress-label {
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      opacity: 0.9;
+    }
+
+    .progress-bar-bg {
+      background: rgba(255,255,255,0.25);
+      border-radius: 20px;
+      height: 18px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.5s ease;
+    }
+
+    /* Overlay celebration */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .overlay.show { display: flex; }
+
+    .overlay-card {
+      background: #fff;
+      border-radius: 32px;
+      padding: 40px 50px;
+      text-align: center;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popIn {
+      0%   { transform: scale(0.4); opacity: 0; }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+
+    .overlay-icon { font-size: 5rem; margin-bottom: 10px; }
+    .overlay-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.2rem;
+      color: #4a4a8a;
+      margin-bottom: 8px;
+    }
+    .overlay-msg {
+      font-size: 1.1rem;
+      color: #666;
+      margin-bottom: 24px;
+    }
+
+    .overlay-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.4rem;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 50px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #fff;
+      cursor: pointer;
+      box-shadow: 0 6px 0 #4a36a0;
+      transition: transform 0.15s;
+    }
+    .overlay-btn:hover { transform: translateY(-3px); }
+
+    /* Confetti */
+    .confetti-piece {
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      animation: confettiFall linear forwards;
+      pointer-events: none;
+      z-index: 200;
+    }
+
+    @keyframes confettiFall {
+      0%   { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+
+    .streak-fire {
+      position: absolute;
+      top: -18px;
+      right: -14px;
+      font-size: 2.2rem;
+      animation: fireWiggle 0.5s infinite alternate;
+    }
+
+    @keyframes fireWiggle {
+      from { transform: rotate(-8deg) scale(1); }
+      to   { transform: rotate(8deg) scale(1.15); }
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      h1 { font-size: 2rem; }
+      .question-text { font-size: 2.6rem; }
+      .choice-btn { font-size: 1.5rem; padding: 14px 8px; }
+      .candy-list { grid-template-columns: repeat(2, 1fr); }
+      .overlay-card { padding: 28px 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Robbie's Math Game!</h1>
+  <div class="stars-bar">⭐⭐⭐⭐⭐</div>
+
+  <div class="game-area">
+
+    <!-- Status badges -->
+    <div class="status-row">
+      <div class="badge"><span>🔥</span> Streak: <strong id="streakCount">0</strong></div>
+      <div class="badge"><span>✅</span> Correct: <strong id="correctCount">0</strong>/10</div>
+      <div class="badge"><span>❓</span> Question: <strong id="questionNum">1</strong></div>
+    </div>
+
+    <!-- Question card -->
+    <div class="question-card" id="questionCard">
+      <div id="streakFire" class="streak-fire" style="display:none;">🔥</div>
+      <div class="question-text" id="questionText">Loading...</div>
+      <div class="choices" id="choices"></div>
+      <div class="feedback" id="feedback"></div>
+    </div>
+
+    <!-- Candy collection -->
+    <div class="collection-card">
+      <div class="collection-title">🍬 Your Candy Collection 🍬</div>
+      <div class="candy-list">
+        <div class="candy-item">
+          <span class="icon">🐻</span>
+          <span class="count" id="cnt-gummy">0</span>
+          <span class="label">Gummy Bears</span>
+        </div>
+        <div class="candy-item">
+          <span class="icon">🌈</span>
+          <span class="count" id="cnt-skittle">0</span>
+          <span class="label">Skittles</span>
+        </div>
+        <div class="candy-item">
+          <span class="icon">🟤</span>
+          <span class="count" id="cnt-mms">0</span>
+          <span class="label">M&Ms</span>
+        </div>
+        <div class="candy-item">
+          <span class="icon">🍫</span>
+          <span class="count" id="cnt-choc">0</span>
+          <span class="label">Chocolates</span>
+        </div>
+        <div class="candy-item">
+          <span class="icon">🍨</span>
+          <span class="count" id="cnt-sundae">0</span>
+          <span class="label">Ice Cream Sundaes</span>
+        </div>
+        <div class="candy-item">
+          <span class="icon">🎂</span>
+          <span class="count" id="cnt-cake">0</span>
+          <span class="label">Birthday Cakes</span>
+        </div>
+      </div>
+
+      <div class="cake-progress">
+        <div class="cake-progress-label" id="cakeProgressLabel">0/10 correct — keep going for a birthday cake! 🎂</div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="cakeBar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Celebration overlay -->
+  <div class="overlay" id="overlay">
+    <div class="overlay-card">
+      <div class="overlay-icon" id="overlayIcon"></div>
+      <div class="overlay-title" id="overlayTitle"></div>
+      <div class="overlay-msg" id="overlayMsg"></div>
+      <button class="overlay-btn" id="overlayBtn" onclick="nextQuestion()">Next Question!</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Game State ──────────────────────────────────────────────────────────
+    const state = {
+      streak: 0,
+      totalCorrect: 0,
+      questionNum: 1,
+      answering: true,
+      collection: { gummy: 0, skittle: 0, mms: 0, choc: 0, sundae: 0, cake: 0 },
+      pendingOverlay: null,   // candy reward to show after brief delay
+    };
+
+    const CANDY_REWARDS = [
+      null,                                          // 0-in-a-row (no reward yet)
+      { key: 'gummy',   icon: '🐻',  name: 'Gummy Bear!',          msg: 'You got 1 right — a gummy bear for you!' },
+      { key: 'skittle', icon: '🌈',  name: 'Skittle!',             msg: '2 in a row — taste the rainbow!' },
+      { key: 'mms',     icon: '🟤',  name: 'M&Ms!',                msg: '3 in a row — melts in your mouth!' },
+      { key: 'choc',    icon: '🍫',  name: 'Chocolate!',           msg: '4 in a row — you\'re on fire! 🔥' },
+      { key: 'sundae',  icon: '🍨',  name: 'Ice Cream Sundae!!',   msg: '5 in a row — WOW, that\'s amazing!!' },
+    ];
+
+    const CAKE_REWARD = { key: 'cake', icon: '🎂', name: 'BIRTHDAY CAKE!!', msg: '10 correct answers — YOU DID IT! 🎉🎉🎉' };
+
+    // ── Question Generation ─────────────────────────────────────────────────
+    function rand(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateQuestion() {
+      const type = rand(0, 2); // 0=add, 1=sub, 2=mul
+      let a, b, answer, symbol;
+
+      if (type === 0) {
+        a = rand(1, 10); b = rand(1, 10);
+        answer = a + b; symbol = '+';
+      } else if (type === 1) {
+        a = rand(2, 10); b = rand(1, a); // ensure non-negative
+        answer = a - b; symbol = '−';
+      } else {
+        a = rand(1, 5); b = rand(1, 5);
+        answer = a * b; symbol = '×';
+      }
+
+      // Generate 3 wrong answers
+      const wrongs = new Set();
+      while (wrongs.size < 3) {
+        let w = answer + rand(-4, 4);
+        if (w !== answer && w >= 0) wrongs.add(w);
+      }
+
+      const choices = shuffle([answer, ...wrongs]);
+
+      return { text: `${a}  ${symbol}  ${b}  = ?`, answer, choices };
+    }
+
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = rand(0, i);
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // ── Rendering ───────────────────────────────────────────────────────────
+    function renderQuestion() {
+      const q = generateQuestion();
+      state.currentAnswer = q.answer;
+      state.answering = true;
+
+      document.getElementById('questionText').textContent = q.text;
+      document.getElementById('feedback').textContent = '';
+
+      const choicesEl = document.getElementById('choices');
+      choicesEl.innerHTML = '';
+      q.choices.forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = c;
+        btn.onclick = () => handleAnswer(c, btn);
+        choicesEl.appendChild(btn);
+      });
+
+      document.getElementById('questionNum').textContent = state.questionNum;
+      document.getElementById('streakCount').textContent = state.streak;
+      document.getElementById('correctCount').textContent = state.totalCorrect;
+      document.getElementById('streakFire').style.display = state.streak >= 2 ? 'block' : 'none';
+    }
+
+    function updateCollection() {
+      const c = state.collection;
+      document.getElementById('cnt-gummy').textContent = c.gummy;
+      document.getElementById('cnt-skittle').textContent = c.skittle;
+      document.getElementById('cnt-mms').textContent = c.mms;
+      document.getElementById('cnt-choc').textContent = c.choc;
+      document.getElementById('cnt-sundae').textContent = c.sundae;
+      document.getElementById('cnt-cake').textContent = c.cake;
+
+      const pct = Math.min((state.totalCorrect / 10) * 100, 100);
+      document.getElementById('cakeBar').style.width = pct + '%';
+      const remaining = Math.max(0, 10 - state.totalCorrect);
+      document.getElementById('cakeProgressLabel').textContent =
+        state.totalCorrect >= 10
+          ? '🎂 You earned a Birthday Cake! 🎂'
+          : `${state.totalCorrect}/10 correct — ${remaining} more for a birthday cake! 🎂`;
+    }
+
+    // ── Answer Handling ─────────────────────────────────────────────────────
+    function handleAnswer(choice, btn) {
+      if (!state.answering) return;
+      state.answering = false;
+
+      const correct = choice === state.currentAnswer;
+
+      // Disable all buttons
+      document.querySelectorAll('.choice-btn').forEach(b => {
+        b.disabled = true;
+        if (parseInt(b.textContent) === state.currentAnswer) b.classList.add('correct');
+      });
+
+      if (correct) {
+        btn.classList.add('correct');
+        state.streak++;
+        state.totalCorrect++;
+        state.questionNum++;
+
+        document.getElementById('feedback').textContent = getCorrectPhrase();
+        launchConfetti(12);
+
+        // Determine candy reward (streak capped at 5)
+        const streakCapped = Math.min(state.streak, 5);
+        const reward = CANDY_REWARDS[streakCapped];
+        if (reward) state.collection[reward.key]++;
+
+        // Check for cake (every 10 correct)
+        const earnedCake = state.totalCorrect % 10 === 0;
+        if (earnedCake) state.collection.cake++;
+
+        updateCollection();
+
+        // Show overlay after short delay so player sees feedback
+        if (earnedCake) {
+          // Cake takes priority
+          state.pendingOverlay = { ...CAKE_REWARD, extraConfetti: true };
+          setTimeout(showOverlay, 900);
+        } else if (reward) {
+          state.pendingOverlay = reward;
+          setTimeout(showOverlay, 900);
+        } else {
+          setTimeout(nextQuestion, 1100);
+        }
+
+      } else {
+        btn.classList.add('wrong');
+        state.streak = 0;
+        document.getElementById('streakFire').style.display = 'none';
+        document.getElementById('streakCount').textContent = 0;
+        document.getElementById('feedback').textContent = '😬 Oops! Try again next time!';
+        setTimeout(nextQuestion, 1300);
+      }
+    }
+
+    function getCorrectPhrase() {
+      const phrases = ['Correct! 🎉', 'Amazing! ⭐', 'You got it! 🌟', 'Fantastic! 🎊', 'Super! 🚀', 'Great job! 💫'];
+      return phrases[rand(0, phrases.length - 1)];
+    }
+
+    // ── Overlay ─────────────────────────────────────────────────────────────
+    function showOverlay() {
+      const r = state.pendingOverlay;
+      if (!r) return;
+
+      document.getElementById('overlayIcon').textContent = r.icon;
+      document.getElementById('overlayTitle').textContent = r.name;
+      document.getElementById('overlayMsg').textContent = r.msg;
+      document.getElementById('overlay').classList.add('show');
+
+      if (r.extraConfetti) launchConfetti(60);
+      else launchConfetti(30);
+    }
+
+    function nextQuestion() {
+      document.getElementById('overlay').classList.remove('show');
+      state.pendingOverlay = null;
+      renderQuestion();
+    }
+
+    // ── Confetti ─────────────────────────────────────────────────────────────
+    function launchConfetti(count) {
+      const colors = ['#f7971e','#ffd200','#11998e','#ee0979','#4776e6','#ff6a00','#8e54e9','#38ef7d','#ff6b6b'];
+      for (let i = 0; i < count; i++) {
+        setTimeout(() => {
+          const el = document.createElement('div');
+          el.className = 'confetti-piece';
+          el.style.left = rand(5, 95) + 'vw';
+          el.style.top = '-20px';
+          el.style.background = colors[rand(0, colors.length - 1)];
+          el.style.animationDuration = rand(1200, 2500) + 'ms';
+          el.style.transform = `rotate(${rand(0, 360)}deg)`;
+          document.body.appendChild(el);
+          setTimeout(() => el.remove(), 3000);
+        }, i * 60);
+      }
+    }
+
+    // ── Start ────────────────────────────────────────────────────────────────
+    renderQuestion();
+  </script>
+</body>
+</html>
