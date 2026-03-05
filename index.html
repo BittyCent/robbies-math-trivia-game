@@ -304,6 +304,19 @@
       to   { transform: rotate(8deg) scale(1.15); }
     }
 
+    .reset-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      padding: 10px 24px;
+      border: 2px solid rgba(255,255,255,0.6);
+      border-radius: 50px;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .reset-btn:hover { background: rgba(255,80,80,0.4); transform: scale(1.05); }
+
     /* Responsive */
     @media (max-width: 480px) {
       h1 { font-size: 2rem; }
@@ -377,6 +390,10 @@
         <div class="progress-bar-bg">
           <div class="progress-bar-fill" id="cakeBar" style="width:0%"></div>
         </div>
+      </div>
+
+      <div style="text-align:center; margin-top:16px;">
+        <button class="reset-btn" onclick="resetCollection()">🗑️ Reset Candy Collection</button>
       </div>
     </div>
 
@@ -593,6 +610,18 @@
           setTimeout(() => el.remove(), 3000);
         }, i * 60);
       }
+    }
+
+    // ── Reset Collection ─────────────────────────────────────────────────────
+    function resetCollection() {
+      if (!confirm('Reset all candy? This cannot be undone!')) return;
+      state.collection = { gummy: 0, skittle: 0, mms: 0, choc: 0, sundae: 0, cake: 0 };
+      state.streak = 0;
+      state.totalCorrect = 0;
+      state.questionNum = 1;
+      document.getElementById('streakFire').style.display = 'none';
+      updateCollection();
+      renderQuestion();
     }
 
     // ── Start ────────────────────────────────────────────────────────────────
