@@ -376,6 +376,119 @@
     }
     .reset-btn:hover { background: rgba(255,80,80,0.4); transform: scale(1.05); }
 
+    /* ── Sugar Crush celebration ── */
+    #sugarCrush {
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      background: radial-gradient(ellipse at 50% 45%, rgba(50,0,70,0.97) 0%, rgba(4,0,18,0.99) 100%);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    #sugarCrush.sc-visible { opacity: 1; pointer-events: all; }
+
+    #sugarCrush.sc-out {
+      opacity: 0;
+      transition: opacity 0.55s ease-in;
+    }
+
+    .sc-row { display: flex; gap: 4px; align-items: center; }
+
+    .sc-letter {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(3.8rem, 13vw, 9rem);
+      line-height: 1;
+      display: inline-block;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .sc-letter.sc-in {
+      animation: scIn 0.72s cubic-bezier(0.34, 1.56, 0.64, 1) var(--d, 0s) forwards;
+      text-shadow:
+        0 0 8px rgba(255,255,255,0.98),
+        0 0 22px rgba(255,255,255,0.8),
+        0 0 55px currentColor,
+        0 0 100px currentColor,
+        1px 1px 0 rgba(255,255,255,1),
+        2px 2px 0 rgba(255,255,255,0.9),
+        3px 3px 0 rgba(255,255,255,0.7),
+        4px 4px 0 rgba(255,255,255,0.4),
+        5px 5px 0 currentColor,
+        7px 7px 0 rgba(0,0,0,0.65),
+        8px 8px 1px rgba(0,0,0,0.45),
+        10px 10px 20px rgba(0,0,0,0.5);
+    }
+
+    @keyframes scIn {
+      0%   { opacity: 0; transform: translate(var(--sx,0px), var(--sy,-400px)) rotate(var(--r,0deg)) scale(0.08); }
+      55%  { opacity: 1; }
+      100% { opacity: 1; transform: translate(0,0) rotate(0deg) scale(1); }
+    }
+
+    .sc-letter.sc-shimmer {
+      animation: scShimmer 0.5s ease-in-out infinite alternate;
+      text-shadow:
+        0 0 8px rgba(255,255,255,0.98),
+        0 0 22px rgba(255,255,255,0.8),
+        0 0 55px currentColor,
+        0 0 100px currentColor,
+        1px 1px 0 rgba(255,255,255,1),
+        2px 2px 0 rgba(255,255,255,0.9),
+        3px 3px 0 rgba(255,255,255,0.7),
+        4px 4px 0 rgba(255,255,255,0.4),
+        5px 5px 0 currentColor,
+        7px 7px 0 rgba(0,0,0,0.65),
+        8px 8px 1px rgba(0,0,0,0.45),
+        10px 10px 20px rgba(0,0,0,0.5);
+    }
+
+    @keyframes scShimmer {
+      from { filter: brightness(1) saturate(1); }
+      to   { filter: brightness(1.65) saturate(1.6) drop-shadow(0 0 18px white); }
+    }
+
+    .sc-letter.sc-out-letter {
+      animation: scOutLetter 0.55s ease-in var(--od, 0s) forwards !important;
+    }
+
+    @keyframes scOutLetter {
+      0%   { opacity: 1; transform: translate(0,0) rotate(0deg) scale(1); }
+      100% { opacity: 0; transform: translate(var(--ex,0px), var(--ey,-500px)) rotate(var(--er,0deg)) scale(0.2); }
+    }
+
+    .sc-subtitle {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(1.1rem, 4vw, 1.7rem);
+      color: rgba(255,220,50,0);
+      letter-spacing: 6px;
+      text-shadow: 0 0 24px rgba(255,220,50,0.8);
+      transition: color 0.7s 1.7s;
+    }
+
+    #sugarCrush.sc-visible .sc-subtitle { color: rgba(255,220,50,0.95); }
+
+    .sc-sparkle {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: scSparkle var(--sd,0.8s) ease-out var(--ss,0s) both;
+    }
+
+    @keyframes scSparkle {
+      0%   { transform: translate(0,0) scale(0); opacity: 1; }
+      100% { transform: translate(var(--spx,0px), var(--spy,-80px)) scale(1.5); opacity: 0; }
+    }
+
     @media (max-width: 480px) {
       h1 { font-size: 2rem; }
       .question-text { font-size: 2.6rem; }
@@ -615,7 +728,14 @@
     </div>
   </div><!-- /gameContent -->
 
-  <!-- Celebration overlay (above gameContent) -->
+  <!-- Sugar Crush full-screen celebration -->
+  <div id="sugarCrush">
+    <div class="sc-row" id="scRow1"></div>
+    <div class="sc-row" id="scRow2"></div>
+    <div class="sc-subtitle">🍭 &nbsp; 10 Correct! &nbsp; 🍭</div>
+  </div>
+
+  <!-- Candy reward overlay (above gameContent) -->
   <div class="overlay" id="overlay">
     <div class="overlay-card">
       <div class="overlay-icon" id="overlayIcon"></div>
@@ -1070,7 +1190,8 @@
 
         if (earnedCake) {
           state.pendingOverlay = { ...CAKE_REWARD, extraConfetti:true };
-          setTimeout(showOverlay, 900);
+          // Sugar Crush fires first, then the birthday cake overlay
+          setTimeout(() => showSugarCrush(() => setTimeout(showOverlay, 350)), 500);
         } else if (reward) {
           state.pendingOverlay = reward;
           setTimeout(showOverlay, 900);
@@ -1139,6 +1260,99 @@
           document.body.appendChild(el);
           setTimeout(() => el.remove(), 3500);
         }, i * 50);
+      }
+    }
+
+    // ── Sugar Crush ──────────────────────────────────────────────────────────
+    const SC_LETTER_COLORS = [
+      '#ff2255','#ff8800','#ffee00','#00ee66',
+      '#00ccff','#6644ff','#cc22ff','#ff44cc',
+      '#ff5544','#44ffcc'
+    ];
+
+    function showSugarCrush(onComplete) {
+      const el     = document.getElementById('sugarCrush');
+      const row1El = document.getElementById('scRow1');
+      const row2El = document.getElementById('scRow2');
+
+      // Build letters for each word
+      [['SUGAR', row1El, 0], ['CRUSH', row2El, 5]].forEach(([word, container, offset]) => {
+        container.innerHTML = '';
+        word.split('').forEach((ch, i) => {
+          const span = document.createElement('span');
+          span.className = 'sc-letter';
+          span.textContent = ch;
+          span.style.color = SC_LETTER_COLORS[(offset + i) % SC_LETTER_COLORS.length];
+          // Random blast-in origin (letters fly in from all directions)
+          const angle = Math.random() * Math.PI * 2;
+          const dist  = 380 + Math.random() * 280;
+          span.style.setProperty('--sx', Math.round(Math.cos(angle) * dist) + 'px');
+          span.style.setProperty('--sy', Math.round(Math.sin(angle) * dist) + 'px');
+          span.style.setProperty('--r',  (Math.random() * 360 - 180).toFixed(0) + 'deg');
+          span.style.setProperty('--d',  ((offset + i) * 0.09) + 's');
+          container.appendChild(span);
+        });
+      });
+
+      // Show backdrop, then trigger letter animations on next frame
+      el.classList.add('sc-visible');
+      requestAnimationFrame(() => {
+        el.querySelectorAll('.sc-letter').forEach(s => s.classList.add('sc-in'));
+      });
+
+      // Massive confetti right away
+      launchConfetti(90);
+
+      // All 10 letters done by ~9*0.09 + 0.72 ≈ 1.53s → add shimmer at 1.65s
+      setTimeout(() => {
+        el.querySelectorAll('.sc-letter').forEach(s => {
+          s.classList.remove('sc-in');
+          s.classList.add('sc-shimmer');
+        });
+        fireScSparkles(el);
+        launchConfetti(60); // second wave
+      }, 1650);
+
+      // Explode letters outward at 3.0s
+      setTimeout(() => {
+        el.querySelectorAll('.sc-letter').forEach((s, i) => {
+          s.classList.remove('sc-shimmer');
+          const angle = Math.random() * Math.PI * 2;
+          const dist  = 420 + Math.random() * 320;
+          s.style.setProperty('--ex', Math.round(Math.cos(angle) * dist) + 'px');
+          s.style.setProperty('--ey', Math.round(Math.sin(angle) * dist) + 'px');
+          s.style.setProperty('--er', (Math.random() * 720 - 360).toFixed(0) + 'deg');
+          s.style.setProperty('--od', (i * 0.035) + 's');
+          s.classList.add('sc-out-letter');
+        });
+        el.classList.add('sc-out');
+      }, 3000);
+
+      // Hide and hand off at 3.7s
+      setTimeout(() => {
+        el.classList.remove('sc-visible', 'sc-out');
+        el.querySelectorAll('.sc-sparkle').forEach(s => s.remove());
+        onComplete();
+      }, 3700);
+    }
+
+    function fireScSparkles(container) {
+      const colors = ['#fff','#ffd700','#ff69b4','#00ffcc','#ff6600','#aaffff','#ff44ff'];
+      for (let i = 0; i < 30; i++) {
+        const dot = document.createElement('div');
+        dot.className = 'sc-sparkle';
+        const angle = (i / 30) * Math.PI * 2;
+        const dist  = 80 + Math.random() * 160;
+        dot.style.left = '50%';
+        dot.style.top  = '46%';
+        dot.style.marginLeft = '-5px';
+        dot.style.marginTop  = '-5px';
+        dot.style.background = colors[Math.floor(Math.random() * colors.length)];
+        dot.style.setProperty('--spx', Math.round(Math.cos(angle) * dist) + 'px');
+        dot.style.setProperty('--spy', Math.round(Math.sin(angle) * dist) + 'px');
+        dot.style.setProperty('--sd',  (0.55 + Math.random() * 0.65) + 's');
+        dot.style.setProperty('--ss',  (Math.random() * 0.25) + 's');
+        container.appendChild(dot);
       }
     }
 
