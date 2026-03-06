@@ -16,21 +16,31 @@
 
     body {
       font-family: 'Nunito', sans-serif;
-      background: linear-gradient(135deg, #4a00e0, #7b2ff7, #b721ff, #f64f59, #c471ed, #4a00e0);
-      background-size: 400% 400%;
-      animation: gradientShift 12s ease infinite;
+      background: #4a00e0; /* canvas fallback */
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Candyland canvas background ── */
+    #bgCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ── Game content wrapper (above canvas) ── */
+    #gameContent {
+      position: relative;
+      z-index: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
       padding: 20px;
-      overflow-x: hidden;
-    }
-
-    @keyframes gradientShift {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      width: 100%;
+      min-height: 100vh;
     }
 
     h1 {
@@ -85,7 +95,6 @@
 
     .badge span { font-size: 1.3rem; }
 
-    /* Difficulty badge */
     .diff-badge {
       background: rgba(255,255,255,0.25);
       border: 3px solid rgba(255,255,255,0.5);
@@ -104,15 +113,15 @@
     .diff-badge.tier-2 { background: rgba(255,180,0,0.35);   border-color: rgba(255,210,0,0.7); }
     .diff-badge.tier-3 { background: rgba(255,80,80,0.35);   border-color: rgba(255,100,100,0.7); }
 
-    /* Question card */
+    /* ── Question card ── */
     .question-card {
-      background: #fff;
+      background: rgba(255,255,255,0.96);
       background-image: radial-gradient(circle, rgba(100,80,200,0.06) 1px, transparent 1px);
       background-size: 24px 24px;
       border-radius: 28px;
       padding: 36px 40px;
       text-align: center;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.18), inset 0 0 0 2px rgba(120,80,220,0.1);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.22), inset 0 0 0 2px rgba(120,80,220,0.12);
       width: 100%;
       position: relative;
     }
@@ -131,30 +140,61 @@
       gap: 14px;
     }
 
+    /* ── Answer buttons — candy-shell style ── */
     .choice-btn {
       font-family: 'Fredoka One', cursive;
       font-size: 2rem;
-      padding: 18px 10px;
-      border: 4px solid transparent;
-      border-radius: 18px;
+      padding: 20px 10px;
+      border: none;
+      border-radius: 22px;
       cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
       color: #fff;
-      box-shadow: 0 8px 0 rgba(0,0,0,0.22), 0 12px 20px rgba(0,0,0,0.15);
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      position: relative;
+      overflow: hidden;
+      letter-spacing: 1px;
+      transition: transform 0.12s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.12s, filter 0.12s;
+      text-shadow: 0 2px 6px rgba(0,0,0,0.28), 0 1px 0 rgba(0,0,0,0.12);
+      box-shadow:
+        0 9px 0 rgba(0,0,0,0.3),
+        0 14px 28px rgba(0,0,0,0.2),
+        inset 0 2px 0 rgba(255,255,255,0.45),
+        inset 0 -3px 0 rgba(0,0,0,0.18);
     }
 
-    .choice-btn:nth-child(1) { background: linear-gradient(135deg, #f7971e, #ffd200); }
-    .choice-btn:nth-child(2) { background: linear-gradient(135deg, #11998e, #38ef7d); }
-    .choice-btn:nth-child(3) { background: linear-gradient(135deg, #ee0979, #ff6a00); }
-    .choice-btn:nth-child(4) { background: linear-gradient(135deg, #4776e6, #8e54e9); }
+    /* Glossy candy-shell shine */
+    .choice-btn::after {
+      content: '';
+      position: absolute;
+      top: 4px;
+      left: 8%;
+      right: 8%;
+      height: 44%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.42) 0%, rgba(255,255,255,0.04) 100%);
+      border-radius: 14px 14px 50% 50%;
+      pointer-events: none;
+    }
 
-    .choice-btn:hover { transform: translateY(-4px); box-shadow: 0 12px 0 rgba(0,0,0,0.22), 0 16px 24px rgba(0,0,0,0.15); }
-    .choice-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,0.22); filter: brightness(0.88); }
-    .choice-btn:focus-visible { outline: 4px solid rgba(255,255,255,0.85); outline-offset: 3px; }
+    /* Richer, more saturated candy gradients */
+    .choice-btn:nth-child(1) { background: linear-gradient(160deg, #ffdd00 0%, #ff9500 45%, #ff5500 100%); box-shadow: 0 9px 0 #b84000, 0 14px 28px rgba(255,100,0,0.35), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -3px 0 rgba(0,0,0,0.18); }
+    .choice-btn:nth-child(2) { background: linear-gradient(160deg, #00f59b 0%, #00c97a 45%, #009958 100%); box-shadow: 0 9px 0 #006e3c, 0 14px 28px rgba(0,200,120,0.35), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -3px 0 rgba(0,0,0,0.18); }
+    .choice-btn:nth-child(3) { background: linear-gradient(160deg, #ff85c0 0%, #ee0979 45%, #b00050 100%); box-shadow: 0 9px 0 #800038, 0 14px 28px rgba(238,9,121,0.35), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -3px 0 rgba(0,0,0,0.18); }
+    .choice-btn:nth-child(4) { background: linear-gradient(160deg, #90c0ff 0%, #4776e6 45%, #2244c0 100%); box-shadow: 0 9px 0 #142e90, 0 14px 28px rgba(71,118,230,0.35), inset 0 2px 0 rgba(255,255,255,0.45), inset 0 -3px 0 rgba(0,0,0,0.18); }
 
-    .choice-btn.correct { animation: correctFlash 0.5s forwards; border-color: #00ff88; }
-    .choice-btn.wrong   { animation: wrongShake 0.4s forwards; border-color: #ff2244; opacity: 0.5; }
+    .choice-btn:hover {
+      transform: translateY(-6px) scale(1.03);
+      filter: brightness(1.1) saturate(1.15);
+    }
+
+    .choice-btn:active {
+      transform: translateY(5px) scale(0.97);
+      box-shadow: 0 2px 0 rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.3), inset 0 -1px 0 rgba(0,0,0,0.15) !important;
+      filter: brightness(0.85);
+    }
+
+    .choice-btn:focus-visible { outline: 4px solid rgba(255,255,255,0.9); outline-offset: 3px; }
+
+    .choice-btn.correct { animation: correctFlash 0.5s forwards; border: 4px solid #00ff88; }
+    .choice-btn.wrong   { animation: wrongShake 0.4s forwards; border: 4px solid #ff2244; opacity: 0.5; }
 
     @keyframes correctFlash {
       0%   { transform: scale(1); }
@@ -174,10 +214,9 @@
       min-height: 2.4rem;
       margin-top: 20px;
       color: #4a4a8a;
-      transition: opacity 0.3s;
     }
 
-    /* Candy collection — glassmorphism */
+    /* ── Candy collection — glassmorphism ── */
     .collection-card {
       background: rgba(255,255,255,0.12);
       backdrop-filter: blur(12px);
@@ -229,13 +268,12 @@
     .candy-item .count { font-family: 'Fredoka One', cursive; font-size: 1.4rem; display: block; color: #fff; }
     .candy-item .label { font-size: 0.78rem; opacity: 0.9; }
 
-    /* Progress to cake */
     .cake-progress { margin-top: 14px; text-align: center; }
     .cake-progress-label { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; opacity: 0.9; }
     .progress-bar-bg  { background: rgba(255,255,255,0.25); border-radius: 20px; height: 18px; overflow: hidden; }
     .progress-bar-fill { background: linear-gradient(90deg, #f7971e, #ffd200); height: 100%; border-radius: 20px; transition: width 0.5s ease; }
 
-    /* Overlay celebration */
+    /* ── Overlay ── */
     .overlay {
       display: none;
       position: fixed;
@@ -299,7 +337,7 @@
     }
     .overlay-btn:hover { transform: translateY(-3px); }
 
-    /* Confetti */
+    /* ── Confetti ── */
     .confetti-piece {
       position: fixed;
       animation: confettiFall linear forwards;
@@ -349,277 +387,235 @@
 </head>
 <body>
 
-  <h1>Robbie's Math Game!</h1>
-  <div class="stars-bar">⭐⭐⭐⭐⭐</div>
+  <!-- Candyland animated background canvas -->
+  <canvas id="bgCanvas"></canvas>
 
-  <div class="game-area">
+  <!-- All game content sits above the canvas -->
+  <div id="gameContent">
 
-    <div class="status-row">
-      <div class="badge"><span>🔥</span> Streak: <strong id="streakCount">0</strong></div>
-      <div class="badge"><span>✅</span> Correct: <strong id="correctCount">0</strong>/10</div>
-      <div class="badge"><span>❓</span> Question: <strong id="questionNum">1</strong></div>
-      <div class="diff-badge" id="diffBadge"><span>⭐</span> <span id="diffLabel">Easy</span></div>
-    </div>
+    <h1>Robbie's Math Game!</h1>
+    <div class="stars-bar">⭐⭐⭐⭐⭐</div>
 
-    <div class="question-card" id="questionCard">
-      <div id="streakFire" class="streak-fire" style="display:none;">🔥</div>
-      <div class="question-text" id="questionText">Loading...</div>
-      <div class="choices" id="choices"></div>
-      <div class="feedback" id="feedback"></div>
-    </div>
+    <div class="game-area">
 
-    <!-- Candy collection — 9 items (3×3) -->
-    <div class="collection-card">
-      <div class="collection-title">🍬 Your Candy Collection 🍬</div>
-      <div class="candy-list">
-
-        <div class="candy-item">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <defs>
-                <radialGradient id="gb-body" cx="40%" cy="30%" r="65%">
-                  <stop offset="0%" stop-color="#ffcc66"/>
-                  <stop offset="100%" stop-color="#e07a00"/>
-                </radialGradient>
-              </defs>
-              <circle cx="18" cy="13" r="7" fill="url(#gb-body)" opacity="0.92"/>
-              <circle cx="42" cy="13" r="7" fill="url(#gb-body)" opacity="0.92"/>
-              <circle cx="18" cy="13" r="3.8" fill="#c86000" opacity="0.6"/>
-              <circle cx="42" cy="13" r="3.8" fill="#c86000" opacity="0.6"/>
-              <circle cx="30" cy="23" r="14" fill="url(#gb-body)" opacity="0.92"/>
-              <ellipse cx="30" cy="43" rx="16" ry="15" fill="url(#gb-body)" opacity="0.92"/>
-              <ellipse cx="13" cy="38" rx="5" ry="8" fill="url(#gb-body)" opacity="0.9" transform="rotate(-15,13,38)"/>
-              <ellipse cx="47" cy="38" rx="5" ry="8" fill="url(#gb-body)" opacity="0.9" transform="rotate(15,47,38)"/>
-              <ellipse cx="22" cy="55" rx="6.5" ry="5" fill="url(#gb-body)" opacity="0.9"/>
-              <ellipse cx="38" cy="55" rx="6.5" ry="5" fill="url(#gb-body)" opacity="0.9"/>
-              <circle cx="25" cy="21" r="2.5" fill="#3a1800"/>
-              <circle cx="35" cy="21" r="2.5" fill="#3a1800"/>
-              <circle cx="25.9" cy="20.1" r="1" fill="white"/>
-              <circle cx="35.9" cy="20.1" r="1" fill="white"/>
-              <ellipse cx="30" cy="27" rx="2.5" ry="1.8" fill="#3a1800"/>
-              <ellipse cx="30" cy="43" rx="6" ry="8" fill="rgba(255,255,255,0.32)"/>
-              <ellipse cx="24" cy="18" rx="5" ry="3.5" fill="rgba(255,255,255,0.3)" transform="rotate(-20,24,18)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-gummy">0</span>
-          <span class="label">Gummy Bears</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <!-- Marshmallow -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <defs>
-                <radialGradient id="mm-bg" cx="45%" cy="35%" r="70%">
-                  <stop offset="0%" stop-color="#ffffff"/>
-                  <stop offset="100%" stop-color="#f0d8e8"/>
-                </radialGradient>
-              </defs>
-              <!-- Shadow -->
-              <ellipse cx="30" cy="55" rx="21" ry="4" fill="rgba(0,0,0,0.12)"/>
-              <!-- Body -->
-              <rect x="7" y="14" width="46" height="38" rx="19" fill="url(#mm-bg)"/>
-              <!-- Pink blush top -->
-              <ellipse cx="30" cy="21" rx="18" ry="7" fill="rgba(255,182,210,0.45)"/>
-              <!-- Crease line -->
-              <path d="M12 32 Q30 28 48 32" fill="none" stroke="rgba(210,160,185,0.5)" stroke-width="2" stroke-linecap="round"/>
-              <!-- Highlight -->
-              <ellipse cx="21" cy="22" rx="8" ry="4.5" fill="rgba(255,255,255,0.75)" transform="rotate(-18,21,22)"/>
-              <circle cx="38" cy="20" r="3" fill="rgba(255,255,255,0.6)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-marshmallow">0</span>
-          <span class="label">Marshmallows</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <!-- Cotton Candy -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <defs>
-                <radialGradient id="cc-grad" cx="45%" cy="40%" r="60%">
-                  <stop offset="0%" stop-color="#ffb8e8"/>
-                  <stop offset="100%" stop-color="#a020c0"/>
-                </radialGradient>
-              </defs>
-              <!-- Stick -->
-              <rect x="26" y="40" width="8" height="20" rx="4" fill="#e8c09a"/>
-              <rect x="27" y="40" width="3" height="20" rx="1.5" fill="rgba(255,255,255,0.3)"/>
-              <!-- Fluffy cloud (layered circles) -->
-              <circle cx="30" cy="29" r="15" fill="url(#cc-grad)" opacity="0.9"/>
-              <circle cx="17" cy="32" r="11" fill="url(#cc-grad)" opacity="0.88"/>
-              <circle cx="43" cy="32" r="11" fill="url(#cc-grad)" opacity="0.88"/>
-              <circle cx="21" cy="21" r="10" fill="url(#cc-grad)" opacity="0.88"/>
-              <circle cx="39" cy="21" r="10" fill="url(#cc-grad)" opacity="0.88"/>
-              <circle cx="30" cy="17" r="10" fill="url(#cc-grad)" opacity="0.92"/>
-              <!-- Highlights -->
-              <circle cx="23" cy="19" r="5" fill="rgba(255,255,255,0.35)"/>
-              <circle cx="37" cy="15" r="3.5" fill="rgba(255,255,255,0.45)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-cotton">0</span>
-          <span class="label">Cotton Candy</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <!-- Ice Cream Sandwich -->
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <defs>
-                <linearGradient id="ics-cookie" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#5a3010"/>
-                  <stop offset="100%" stop-color="#2a1000"/>
-                </linearGradient>
-              </defs>
-              <!-- Top cookie -->
-              <rect x="6" y="7" width="48" height="14" rx="5" fill="url(#ics-cookie)"/>
-              <circle cx="17" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
-              <circle cx="30" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
-              <circle cx="43" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
-              <rect x="9" y="9" width="9" height="8" rx="3" fill="rgba(255,255,255,0.08)"/>
-              <!-- Ice cream filling -->
-              <rect x="4" y="21" width="52" height="18" rx="3" fill="#fff4ec"/>
-              <path d="M6 29 Q20 25 34 29 Q48 33 54 29" fill="none" stroke="rgba(255,200,170,0.55)" stroke-width="2.5"/>
-              <!-- Bottom cookie -->
-              <rect x="6" y="39" width="48" height="14" rx="5" fill="url(#ics-cookie)"/>
-              <circle cx="17" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
-              <circle cx="30" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
-              <circle cx="43" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-sandwich">0</span>
-          <span class="label">Ice Cream Sandwiches</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <defs>
-                <radialGradient id="sk-grad" cx="38%" cy="35%" r="65%">
-                  <stop offset="0%" stop-color="#e84393"/>
-                  <stop offset="100%" stop-color="#7b0d5e"/>
-                </radialGradient>
-              </defs>
-              <ellipse cx="30" cy="57" rx="20" ry="3.5" fill="rgba(0,0,0,0.15)"/>
-              <circle cx="30" cy="30" r="26" fill="url(#sk-grad)"/>
-              <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-              <text x="30" y="40" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="26" fill="white">S</text>
-              <ellipse cx="22" cy="19" rx="10" ry="5" fill="rgba(255,255,255,0.42)" transform="rotate(-30,22,19)"/>
-              <circle cx="38" cy="16" r="3" fill="rgba(255,255,255,0.5)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-skittle">0</span>
-          <span class="label">Skittles</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <defs>
-                <radialGradient id="mms-grad" cx="38%" cy="35%" r="65%">
-                  <stop offset="0%" stop-color="#f7c948"/>
-                  <stop offset="100%" stop-color="#b86800"/>
-                </radialGradient>
-              </defs>
-              <ellipse cx="30" cy="57" rx="20" ry="3.5" fill="rgba(0,0,0,0.15)"/>
-              <circle cx="30" cy="30" r="26" fill="url(#mms-grad)"/>
-              <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
-              <text x="30" y="40" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="24" fill="white">m</text>
-              <ellipse cx="22" cy="19" rx="10" ry="5" fill="rgba(255,255,255,0.45)" transform="rotate(-30,22,19)"/>
-              <circle cx="39" cy="16" r="3" fill="rgba(255,255,255,0.5)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-mms">0</span>
-          <span class="label">M&Ms</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <defs>
-                <linearGradient id="choc-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#7b3f00"/>
-                  <stop offset="100%" stop-color="#3d1500"/>
-                </linearGradient>
-              </defs>
-              <rect x="8" y="13" width="46" height="44" rx="6" fill="rgba(0,0,0,0.2)"/>
-              <rect x="7" y="11" width="46" height="44" rx="6" fill="url(#choc-grad)"/>
-              <line x1="7" y1="26" x2="53" y2="26" stroke="#2a0d00" stroke-width="2.5"/>
-              <line x1="7" y1="41" x2="53" y2="41" stroke="#2a0d00" stroke-width="2.5"/>
-              <line x1="23" y1="11" x2="23" y2="55" stroke="#2a0d00" stroke-width="2.5"/>
-              <line x1="38" y1="11" x2="38" y2="55" stroke="#2a0d00" stroke-width="2.5"/>
-              <rect x="10" y="14" width="7" height="38" rx="3.5" fill="rgba(255,255,255,0.1)"/>
-              <rect x="7" y="11" width="46" height="5" rx="4" fill="rgba(255,255,255,0.18)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-choc">0</span>
-          <span class="label">Chocolates</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <path d="M19 39 L14 57 Q14 59 16 59 L44 59 Q46 59 46 57 L41 39 Z" fill="rgba(180,225,255,0.65)" stroke="rgba(140,200,255,0.85)" stroke-width="1.5"/>
-              <path d="M21 41 L18 55 L22 55 L24 41 Z" fill="rgba(255,255,255,0.3)"/>
-              <ellipse cx="30" cy="39" rx="15" ry="12" fill="#fff8f0"/>
-              <ellipse cx="30" cy="39" rx="9" ry="4" fill="rgba(255,255,255,0.4)"/>
-              <circle cx="30" cy="27" r="13" fill="#ffb3c8"/>
-              <path d="M24 19 Q26 23 24 27 Q22 31 24 34" fill="none" stroke="#a0522d" stroke-width="2.2" stroke-linecap="round"/>
-              <path d="M36 17 Q38 22 36 27" fill="none" stroke="#a0522d" stroke-width="2.2" stroke-linecap="round"/>
-              <path d="M30 14 Q34 8 39 10" fill="none" stroke="#4a7c00" stroke-width="2.2" stroke-linecap="round"/>
-              <circle cx="39" cy="10" r="5.5" fill="#cc0022"/>
-              <circle cx="37.2" cy="8.2" r="1.8" fill="rgba(255,255,255,0.55)"/>
-              <ellipse cx="25" cy="24" rx="5" ry="3" fill="rgba(255,255,255,0.38)" transform="rotate(-20,25,24)"/>
-              <ellipse cx="26" cy="36" rx="5" ry="3" fill="rgba(255,255,255,0.3)" transform="rotate(-20,26,36)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-sundae">0</span>
-          <span class="label">Ice Cream Sundaes</span>
-        </div>
-
-        <div class="candy-item">
-          <span class="icon">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
-              <rect x="4" y="41" width="52" height="17" rx="5" fill="#f472b6"/>
-              <path d="M4 41 Q10 35 16 41 Q22 47 28 41 Q34 35 40 41 Q46 47 52 41 L56 41 L56 37 Q50 31 44 37 Q38 43 32 37 Q26 31 20 37 Q14 43 8 37 L4 37 Z" fill="white"/>
-              <rect x="13" y="26" width="34" height="15" rx="4" fill="#c026d3"/>
-              <path d="M13 26 Q17 21 21 26 Q25 31 29 26 Q33 21 37 26 Q41 31 45 26 L47 26 L47 22 Q43 17 39 22 Q35 27 31 22 Q27 17 23 22 Q19 27 15 22 L13 22 Z" fill="white"/>
-              <rect x="17" y="14" width="5" height="12" rx="2.5" fill="#fbbf24"/>
-              <rect x="28" y="11" width="5" height="15" rx="2.5" fill="#34d399"/>
-              <rect x="39" y="14" width="5" height="12" rx="2.5" fill="#f87171"/>
-              <ellipse cx="19.5" cy="12" rx="3.5" ry="4.5" fill="#ff6b00"/>
-              <ellipse cx="19.5" cy="12.5" rx="1.8" ry="2.8" fill="#ffd200"/>
-              <ellipse cx="30.5" cy="9" rx="3.5" ry="4.5" fill="#ff6b00"/>
-              <ellipse cx="30.5" cy="9.5" rx="1.8" ry="2.8" fill="#ffd200"/>
-              <ellipse cx="41.5" cy="12" rx="3.5" ry="4.5" fill="#ff6b00"/>
-              <ellipse cx="41.5" cy="12.5" rx="1.8" ry="2.8" fill="#ffd200"/>
-              <circle cx="14" cy="50" r="2.5" fill="#ffd200"/>
-              <circle cx="30" cy="50" r="2.5" fill="#34d399"/>
-              <circle cx="46" cy="50" r="2.5" fill="#f87171"/>
-              <rect x="16" y="29" width="4" height="9" rx="2" fill="rgba(255,255,255,0.2)"/>
-            </svg>
-          </span>
-          <span class="count" id="cnt-cake">0</span>
-          <span class="label">Birthday Cakes</span>
-        </div>
-
+      <div class="status-row">
+        <div class="badge"><span>🔥</span> Streak: <strong id="streakCount">0</strong></div>
+        <div class="badge"><span>✅</span> Correct: <strong id="correctCount">0</strong>/10</div>
+        <div class="badge"><span>❓</span> Question: <strong id="questionNum">1</strong></div>
+        <div class="diff-badge" id="diffBadge"><span>⭐</span> <span id="diffLabel">Easy</span></div>
       </div>
 
-      <div class="cake-progress">
-        <div class="cake-progress-label" id="cakeProgressLabel">0/10 correct — keep going for a birthday cake! 🎂</div>
-        <div class="progress-bar-bg">
-          <div class="progress-bar-fill" id="cakeBar" style="width:0%"></div>
+      <div class="question-card" id="questionCard">
+        <div id="streakFire" class="streak-fire" style="display:none;">🔥</div>
+        <div class="question-text" id="questionText">Loading...</div>
+        <div class="choices" id="choices"></div>
+        <div class="feedback" id="feedback"></div>
+      </div>
+
+      <!-- Candy collection — 9 items (3×3) -->
+      <div class="collection-card">
+        <div class="collection-title">🍬 Your Candy Collection 🍬</div>
+        <div class="candy-list">
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <defs><radialGradient id="gb-body" cx="40%" cy="30%" r="65%"><stop offset="0%" stop-color="#ffcc66"/><stop offset="100%" stop-color="#e07a00"/></radialGradient></defs>
+                <circle cx="18" cy="13" r="7" fill="url(#gb-body)" opacity="0.92"/>
+                <circle cx="42" cy="13" r="7" fill="url(#gb-body)" opacity="0.92"/>
+                <circle cx="18" cy="13" r="3.8" fill="#c86000" opacity="0.6"/>
+                <circle cx="42" cy="13" r="3.8" fill="#c86000" opacity="0.6"/>
+                <circle cx="30" cy="23" r="14" fill="url(#gb-body)" opacity="0.92"/>
+                <ellipse cx="30" cy="43" rx="16" ry="15" fill="url(#gb-body)" opacity="0.92"/>
+                <ellipse cx="13" cy="38" rx="5" ry="8" fill="url(#gb-body)" opacity="0.9" transform="rotate(-15,13,38)"/>
+                <ellipse cx="47" cy="38" rx="5" ry="8" fill="url(#gb-body)" opacity="0.9" transform="rotate(15,47,38)"/>
+                <ellipse cx="22" cy="55" rx="6.5" ry="5" fill="url(#gb-body)" opacity="0.9"/>
+                <ellipse cx="38" cy="55" rx="6.5" ry="5" fill="url(#gb-body)" opacity="0.9"/>
+                <circle cx="25" cy="21" r="2.5" fill="#3a1800"/>
+                <circle cx="35" cy="21" r="2.5" fill="#3a1800"/>
+                <circle cx="25.9" cy="20.1" r="1" fill="white"/>
+                <circle cx="35.9" cy="20.1" r="1" fill="white"/>
+                <ellipse cx="30" cy="27" rx="2.5" ry="1.8" fill="#3a1800"/>
+                <ellipse cx="30" cy="43" rx="6" ry="8" fill="rgba(255,255,255,0.32)"/>
+                <ellipse cx="24" cy="18" rx="5" ry="3.5" fill="rgba(255,255,255,0.3)" transform="rotate(-20,24,18)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-gummy">0</span>
+            <span class="label">Gummy Bears</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <defs><radialGradient id="mm-bg" cx="45%" cy="35%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0d8e8"/></radialGradient></defs>
+                <ellipse cx="30" cy="55" rx="21" ry="4" fill="rgba(0,0,0,0.12)"/>
+                <rect x="7" y="14" width="46" height="38" rx="19" fill="url(#mm-bg)"/>
+                <ellipse cx="30" cy="21" rx="18" ry="7" fill="rgba(255,182,210,0.45)"/>
+                <path d="M12 32 Q30 28 48 32" fill="none" stroke="rgba(210,160,185,0.5)" stroke-width="2" stroke-linecap="round"/>
+                <ellipse cx="21" cy="22" rx="8" ry="4.5" fill="rgba(255,255,255,0.75)" transform="rotate(-18,21,22)"/>
+                <circle cx="38" cy="20" r="3" fill="rgba(255,255,255,0.6)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-marshmallow">0</span>
+            <span class="label">Marshmallows</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <defs><radialGradient id="cc-grad" cx="45%" cy="40%" r="60%"><stop offset="0%" stop-color="#ffb8e8"/><stop offset="100%" stop-color="#a020c0"/></radialGradient></defs>
+                <rect x="26" y="40" width="8" height="20" rx="4" fill="#e8c09a"/>
+                <rect x="27" y="40" width="3" height="20" rx="1.5" fill="rgba(255,255,255,0.3)"/>
+                <circle cx="30" cy="29" r="15" fill="url(#cc-grad)" opacity="0.9"/>
+                <circle cx="17" cy="32" r="11" fill="url(#cc-grad)" opacity="0.88"/>
+                <circle cx="43" cy="32" r="11" fill="url(#cc-grad)" opacity="0.88"/>
+                <circle cx="21" cy="21" r="10" fill="url(#cc-grad)" opacity="0.88"/>
+                <circle cx="39" cy="21" r="10" fill="url(#cc-grad)" opacity="0.88"/>
+                <circle cx="30" cy="17" r="10" fill="url(#cc-grad)" opacity="0.92"/>
+                <circle cx="23" cy="19" r="5" fill="rgba(255,255,255,0.35)"/>
+                <circle cx="37" cy="15" r="3.5" fill="rgba(255,255,255,0.45)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-cotton">0</span>
+            <span class="label">Cotton Candy</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <defs><linearGradient id="ics-cookie" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5a3010"/><stop offset="100%" stop-color="#2a1000"/></linearGradient></defs>
+                <rect x="6" y="7" width="48" height="14" rx="5" fill="url(#ics-cookie)"/>
+                <circle cx="17" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
+                <circle cx="30" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
+                <circle cx="43" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
+                <rect x="9" y="9" width="9" height="8" rx="3" fill="rgba(255,255,255,0.08)"/>
+                <rect x="4" y="21" width="52" height="18" rx="3" fill="#fff4ec"/>
+                <path d="M6 29 Q20 25 34 29 Q48 33 54 29" fill="none" stroke="rgba(255,200,170,0.55)" stroke-width="2.5"/>
+                <rect x="6" y="39" width="48" height="14" rx="5" fill="url(#ics-cookie)"/>
+                <circle cx="17" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
+                <circle cx="30" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
+                <circle cx="43" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-sandwich">0</span>
+            <span class="label">Ice Cream Sandwiches</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <defs><radialGradient id="sk-grad" cx="38%" cy="35%" r="65%"><stop offset="0%" stop-color="#e84393"/><stop offset="100%" stop-color="#7b0d5e"/></radialGradient></defs>
+                <ellipse cx="30" cy="57" rx="20" ry="3.5" fill="rgba(0,0,0,0.15)"/>
+                <circle cx="30" cy="30" r="26" fill="url(#sk-grad)"/>
+                <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                <text x="30" y="40" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="26" fill="white">S</text>
+                <ellipse cx="22" cy="19" rx="10" ry="5" fill="rgba(255,255,255,0.42)" transform="rotate(-30,22,19)"/>
+                <circle cx="38" cy="16" r="3" fill="rgba(255,255,255,0.5)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-skittle">0</span>
+            <span class="label">Skittles</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <defs><radialGradient id="mms-grad" cx="38%" cy="35%" r="65%"><stop offset="0%" stop-color="#f7c948"/><stop offset="100%" stop-color="#b86800"/></radialGradient></defs>
+                <ellipse cx="30" cy="57" rx="20" ry="3.5" fill="rgba(0,0,0,0.15)"/>
+                <circle cx="30" cy="30" r="26" fill="url(#mms-grad)"/>
+                <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+                <text x="30" y="40" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="24" fill="white">m</text>
+                <ellipse cx="22" cy="19" rx="10" ry="5" fill="rgba(255,255,255,0.45)" transform="rotate(-30,22,19)"/>
+                <circle cx="39" cy="16" r="3" fill="rgba(255,255,255,0.5)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-mms">0</span>
+            <span class="label">M&Ms</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <defs><linearGradient id="choc-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7b3f00"/><stop offset="100%" stop-color="#3d1500"/></linearGradient></defs>
+                <rect x="8" y="13" width="46" height="44" rx="6" fill="rgba(0,0,0,0.2)"/>
+                <rect x="7" y="11" width="46" height="44" rx="6" fill="url(#choc-grad)"/>
+                <line x1="7" y1="26" x2="53" y2="26" stroke="#2a0d00" stroke-width="2.5"/>
+                <line x1="7" y1="41" x2="53" y2="41" stroke="#2a0d00" stroke-width="2.5"/>
+                <line x1="23" y1="11" x2="23" y2="55" stroke="#2a0d00" stroke-width="2.5"/>
+                <line x1="38" y1="11" x2="38" y2="55" stroke="#2a0d00" stroke-width="2.5"/>
+                <rect x="10" y="14" width="7" height="38" rx="3.5" fill="rgba(255,255,255,0.1)"/>
+                <rect x="7" y="11" width="46" height="5" rx="4" fill="rgba(255,255,255,0.18)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-choc">0</span>
+            <span class="label">Chocolates</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <path d="M19 39 L14 57 Q14 59 16 59 L44 59 Q46 59 46 57 L41 39 Z" fill="rgba(180,225,255,0.65)" stroke="rgba(140,200,255,0.85)" stroke-width="1.5"/>
+                <path d="M21 41 L18 55 L22 55 L24 41 Z" fill="rgba(255,255,255,0.3)"/>
+                <ellipse cx="30" cy="39" rx="15" ry="12" fill="#fff8f0"/>
+                <ellipse cx="30" cy="39" rx="9" ry="4" fill="rgba(255,255,255,0.4)"/>
+                <circle cx="30" cy="27" r="13" fill="#ffb3c8"/>
+                <path d="M24 19 Q26 23 24 27 Q22 31 24 34" fill="none" stroke="#a0522d" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M36 17 Q38 22 36 27" fill="none" stroke="#a0522d" stroke-width="2.2" stroke-linecap="round"/>
+                <path d="M30 14 Q34 8 39 10" fill="none" stroke="#4a7c00" stroke-width="2.2" stroke-linecap="round"/>
+                <circle cx="39" cy="10" r="5.5" fill="#cc0022"/>
+                <circle cx="37.2" cy="8.2" r="1.8" fill="rgba(255,255,255,0.55)"/>
+                <ellipse cx="25" cy="24" rx="5" ry="3" fill="rgba(255,255,255,0.38)" transform="rotate(-20,25,24)"/>
+                <ellipse cx="26" cy="36" rx="5" ry="3" fill="rgba(255,255,255,0.3)" transform="rotate(-20,26,36)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-sundae">0</span>
+            <span class="label">Ice Cream Sundaes</span>
+          </div>
+
+          <div class="candy-item">
+            <span class="icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="52" height="52">
+                <rect x="4" y="41" width="52" height="17" rx="5" fill="#f472b6"/>
+                <path d="M4 41 Q10 35 16 41 Q22 47 28 41 Q34 35 40 41 Q46 47 52 41 L56 41 L56 37 Q50 31 44 37 Q38 43 32 37 Q26 31 20 37 Q14 43 8 37 L4 37 Z" fill="white"/>
+                <rect x="13" y="26" width="34" height="15" rx="4" fill="#c026d3"/>
+                <path d="M13 26 Q17 21 21 26 Q25 31 29 26 Q33 21 37 26 Q41 31 45 26 L47 26 L47 22 Q43 17 39 22 Q35 27 31 22 Q27 17 23 22 Q19 27 15 22 L13 22 Z" fill="white"/>
+                <rect x="17" y="14" width="5" height="12" rx="2.5" fill="#fbbf24"/>
+                <rect x="28" y="11" width="5" height="15" rx="2.5" fill="#34d399"/>
+                <rect x="39" y="14" width="5" height="12" rx="2.5" fill="#f87171"/>
+                <ellipse cx="19.5" cy="12" rx="3.5" ry="4.5" fill="#ff6b00"/>
+                <ellipse cx="19.5" cy="12.5" rx="1.8" ry="2.8" fill="#ffd200"/>
+                <ellipse cx="30.5" cy="9" rx="3.5" ry="4.5" fill="#ff6b00"/>
+                <ellipse cx="30.5" cy="9.5" rx="1.8" ry="2.8" fill="#ffd200"/>
+                <ellipse cx="41.5" cy="12" rx="3.5" ry="4.5" fill="#ff6b00"/>
+                <ellipse cx="41.5" cy="12.5" rx="1.8" ry="2.8" fill="#ffd200"/>
+                <circle cx="14" cy="50" r="2.5" fill="#ffd200"/>
+                <circle cx="30" cy="50" r="2.5" fill="#34d399"/>
+                <circle cx="46" cy="50" r="2.5" fill="#f87171"/>
+                <rect x="16" y="29" width="4" height="9" rx="2" fill="rgba(255,255,255,0.2)"/>
+              </svg>
+            </span>
+            <span class="count" id="cnt-cake">0</span>
+            <span class="label">Birthday Cakes</span>
+          </div>
+
+        </div>
+
+        <div class="cake-progress">
+          <div class="cake-progress-label" id="cakeProgressLabel">0/10 correct — keep going for a birthday cake! 🎂</div>
+          <div class="progress-bar-bg">
+            <div class="progress-bar-fill" id="cakeBar" style="width:0%"></div>
+          </div>
+        </div>
+
+        <div style="text-align:center; margin-top:16px;">
+          <button class="reset-btn" onclick="resetCollection()">🗑️ Reset Candy Collection</button>
         </div>
       </div>
 
-      <div style="text-align:center; margin-top:16px;">
-        <button class="reset-btn" onclick="resetCollection()">🗑️ Reset Candy Collection</button>
-      </div>
     </div>
+  </div><!-- /gameContent -->
 
-  </div>
-
-  <!-- Celebration overlay -->
+  <!-- Celebration overlay (above gameContent) -->
   <div class="overlay" id="overlay">
     <div class="overlay-card">
       <div class="overlay-icon" id="overlayIcon"></div>
@@ -630,12 +626,192 @@
   </div>
 
   <script>
-    // ── Candy SVG Icons (overlay size 80×80, unique gradient IDs prefixed ov-) ──
+    // ════════════════════════════════════════════════════════════════════════
+    // CANDYLAND BACKGROUND CANVAS
+    // ════════════════════════════════════════════════════════════════════════
+    const bgCanvas = document.getElementById('bgCanvas');
+    const bgCtx    = bgCanvas.getContext('2d');
+
+    function resizeBg() {
+      bgCanvas.width  = window.innerWidth;
+      bgCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeBg);
+    resizeBg();
+
+    // Gradient color stops that loop for the animated background
+    const BG_STOPS = [
+      [74,  0,  224],   // deep purple
+      [150, 20, 255],   // violet
+      [200, 30, 180],   // magenta
+      [246, 79,  89],   // coral-red
+      [180, 60, 240],   // purple-pink
+      [74,  0,  224],   // loop back
+    ];
+
+    function lerpRGB(a, b, t) {
+      return a.map((v, i) => Math.round(v + (b[i] - v) * t));
+    }
+
+    // Candy particle types and colors
+    const CANDY_COLORS = [
+      '#ff4da6','#ff2255','#ff9900','#ffdd00',
+      '#00ddaa','#aa44ff','#00ccff','#ff6eb4',
+      '#44ff88','#ff8833'
+    ];
+
+    class CandyParticle {
+      constructor(initial) { this.respawn(initial); }
+
+      respawn(initial) {
+        const W = bgCanvas.width, H = bgCanvas.height;
+        this.x     = Math.random() * W;
+        this.y     = initial ? Math.random() * H : H + 80;
+        this.type  = ['lollipop','star','gumdrop','heart','swirl'][Math.floor(Math.random() * 5)];
+        this.size  = 18 + Math.random() * 28;
+        this.speed = 0.25 + Math.random() * 0.65;
+        this.drift = (Math.random() - 0.5) * 0.35;
+        this.rot   = Math.random() * Math.PI * 2;
+        this.rotV  = (Math.random() - 0.5) * 0.018;
+        this.alpha = 0.13 + Math.random() * 0.17;
+        this.c1    = CANDY_COLORS[Math.floor(Math.random() * CANDY_COLORS.length)];
+        this.c2    = CANDY_COLORS[Math.floor(Math.random() * CANDY_COLORS.length)];
+      }
+
+      update() {
+        this.y   -= this.speed;
+        this.x   += this.drift;
+        this.rot += this.rotV;
+        if (this.y < -90) this.respawn(false);
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rot);
+        const s = this.size;
+
+        if (this.type === 'lollipop') {
+          const r = s * 0.5;
+          // stick
+          ctx.strokeStyle = 'rgba(210,170,100,0.9)';
+          ctx.lineWidth = Math.max(2.5, r * 0.18);
+          ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(0, r * 0.75); ctx.lineTo(0, r * 2.3); ctx.stroke();
+          // body
+          ctx.fillStyle = this.c1;
+          ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.fill();
+          // wedge stripes
+          ctx.fillStyle = this.c2;
+          for (let i = 0; i < 3; i++) {
+            ctx.beginPath(); ctx.moveTo(0, 0);
+            ctx.arc(0, 0, r, (i / 3) * Math.PI * 2, (i / 3 + 1/3) * Math.PI * 2);
+            ctx.closePath(); ctx.fill();
+          }
+          // outline
+          ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1.5;
+          ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+          // shine
+          ctx.fillStyle = 'rgba(255,255,255,0.32)';
+          ctx.beginPath(); ctx.arc(-r * 0.2, -r * 0.2, r * 0.27, 0, Math.PI * 2); ctx.fill();
+
+        } else if (this.type === 'star') {
+          const r1 = s * 0.48, r2 = s * 0.2;
+          ctx.fillStyle = this.c1;
+          ctx.beginPath();
+          for (let i = 0; i < 10; i++) {
+            const r = i % 2 === 0 ? r1 : r2;
+            const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+            i === 0 ? ctx.moveTo(Math.cos(a)*r, Math.sin(a)*r) : ctx.lineTo(Math.cos(a)*r, Math.sin(a)*r);
+          }
+          ctx.closePath(); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          ctx.beginPath(); ctx.arc(-r1*0.15, -r1*0.2, r1*0.2, 0, Math.PI*2); ctx.fill();
+
+        } else if (this.type === 'gumdrop') {
+          const r = s * 0.46;
+          ctx.fillStyle = this.c1;
+          ctx.beginPath();
+          ctx.arc(0, -r * 0.08, r, Math.PI, 0);
+          ctx.quadraticCurveTo(r * 1.06, r * 0.72, 0, r * 1.12);
+          ctx.quadraticCurveTo(-r * 1.06, r * 0.72, -r, -r * 0.08);
+          ctx.closePath(); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          ctx.beginPath(); ctx.arc(-r*0.18, -r*0.28, r*0.26, 0, Math.PI*2); ctx.fill();
+
+        } else if (this.type === 'heart') {
+          const hw = s * 0.5;
+          ctx.fillStyle = this.c1;
+          ctx.beginPath();
+          ctx.moveTo(0, hw * 0.55);
+          ctx.bezierCurveTo( hw*1.1,  hw*0.1,  hw*1.1, -hw*0.9,  0, -hw*0.35);
+          ctx.bezierCurveTo(-hw*1.1, -hw*0.9, -hw*1.1,  hw*0.1,  0,  hw*0.55);
+          ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.28)';
+          ctx.beginPath(); ctx.arc(-hw*0.3, -hw*0.08, hw*0.22, 0, Math.PI*2); ctx.fill();
+
+        } else { // swirl
+          const r = s * 0.5;
+          ctx.strokeStyle = this.c1;
+          ctx.lineWidth = Math.max(2.5, r * 0.22);
+          ctx.lineCap = 'round';
+          ctx.beginPath();
+          for (let i = 0; i <= 48; i++) {
+            const t = (i / 48) * Math.PI * 4;
+            const rad = r * (i / 48);
+            i === 0
+              ? ctx.moveTo(Math.cos(t)*rad, Math.sin(t)*rad)
+              : ctx.lineTo(Math.cos(t)*rad, Math.sin(t)*rad);
+          }
+          ctx.stroke();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    // Spawn particles
+    const PARTICLE_COUNT = 32;
+    const particles = Array.from({ length: PARTICLE_COUNT }, () => new CandyParticle(true));
+
+    // Animated gradient state
+    let bgT = 0;
+
+    function bgAnimate() {
+      const W = bgCanvas.width, H = bgCanvas.height;
+      bgT = (bgT + 0.0018) % 1;
+
+      // Smoothly interpolate through gradient stops
+      const len  = BG_STOPS.length - 1;
+      const pos  = bgT * len;
+      const i1   = Math.floor(pos);
+      const i2   = Math.min(i1 + 1, len);
+      const frac = pos - i1;
+      const c1   = lerpRGB(BG_STOPS[i1], BG_STOPS[i2], frac);
+      const ci1  = (i1 + 2) % (len + 1);
+      const ci2  = Math.min(ci1 + 1, len);
+      const c2   = lerpRGB(BG_STOPS[ci1], BG_STOPS[ci2], frac);
+
+      const grad = bgCtx.createLinearGradient(0, 0, W, H);
+      grad.addColorStop(0, `rgb(${c1[0]},${c1[1]},${c1[2]})`);
+      grad.addColorStop(1, `rgb(${c2[0]},${c2[1]},${c2[2]})`);
+      bgCtx.fillStyle = grad;
+      bgCtx.fillRect(0, 0, W, H);
+
+      // Draw candy particles
+      for (const p of particles) { p.update(); p.draw(bgCtx); }
+
+      requestAnimationFrame(bgAnimate);
+    }
+    bgAnimate();
+
+    // ════════════════════════════════════════════════════════════════════════
+    // CANDY SVG ICONS (overlay size 80×80)
+    // ════════════════════════════════════════════════════════════════════════
     const CANDY_ICONS = {
       gummy: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
-        <defs><radialGradient id="ov-gb" cx="40%" cy="30%" r="65%">
-          <stop offset="0%" stop-color="#ffcc66"/><stop offset="100%" stop-color="#e07a00"/>
-        </radialGradient></defs>
+        <defs><radialGradient id="ov-gb" cx="40%" cy="30%" r="65%"><stop offset="0%" stop-color="#ffcc66"/><stop offset="100%" stop-color="#e07a00"/></radialGradient></defs>
         <circle cx="18" cy="13" r="7" fill="url(#ov-gb)" opacity="0.92"/>
         <circle cx="42" cy="13" r="7" fill="url(#ov-gb)" opacity="0.92"/>
         <circle cx="18" cy="13" r="3.8" fill="#c86000" opacity="0.6"/>
@@ -646,31 +822,23 @@
         <ellipse cx="47" cy="38" rx="5" ry="8" fill="url(#ov-gb)" opacity="0.9" transform="rotate(15,47,38)"/>
         <ellipse cx="22" cy="55" rx="6.5" ry="5" fill="url(#ov-gb)" opacity="0.9"/>
         <ellipse cx="38" cy="55" rx="6.5" ry="5" fill="url(#ov-gb)" opacity="0.9"/>
-        <circle cx="25" cy="21" r="2.5" fill="#3a1800"/>
-        <circle cx="35" cy="21" r="2.5" fill="#3a1800"/>
-        <circle cx="25.9" cy="20.1" r="1" fill="white"/>
-        <circle cx="35.9" cy="20.1" r="1" fill="white"/>
+        <circle cx="25" cy="21" r="2.5" fill="#3a1800"/><circle cx="35" cy="21" r="2.5" fill="#3a1800"/>
+        <circle cx="25.9" cy="20.1" r="1" fill="white"/><circle cx="35.9" cy="20.1" r="1" fill="white"/>
         <ellipse cx="30" cy="27" rx="2.5" ry="1.8" fill="#3a1800"/>
         <ellipse cx="30" cy="43" rx="6" ry="8" fill="rgba(255,255,255,0.32)"/>
         <ellipse cx="24" cy="18" rx="5" ry="3.5" fill="rgba(255,255,255,0.3)" transform="rotate(-20,24,18)"/>
       </svg>`,
-
       marshmallow: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
-        <defs><radialGradient id="ov-mm-bg" cx="45%" cy="35%" r="70%">
-          <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0d8e8"/>
-        </radialGradient></defs>
+        <defs><radialGradient id="ov-mw" cx="45%" cy="35%" r="70%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0d8e8"/></radialGradient></defs>
         <ellipse cx="30" cy="55" rx="21" ry="4" fill="rgba(0,0,0,0.12)"/>
-        <rect x="7" y="14" width="46" height="38" rx="19" fill="url(#ov-mm-bg)"/>
+        <rect x="7" y="14" width="46" height="38" rx="19" fill="url(#ov-mw)"/>
         <ellipse cx="30" cy="21" rx="18" ry="7" fill="rgba(255,182,210,0.45)"/>
         <path d="M12 32 Q30 28 48 32" fill="none" stroke="rgba(210,160,185,0.5)" stroke-width="2" stroke-linecap="round"/>
         <ellipse cx="21" cy="22" rx="8" ry="4.5" fill="rgba(255,255,255,0.75)" transform="rotate(-18,21,22)"/>
         <circle cx="38" cy="20" r="3" fill="rgba(255,255,255,0.6)"/>
       </svg>`,
-
       cotton: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
-        <defs><radialGradient id="ov-cc" cx="45%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#ffb8e8"/><stop offset="100%" stop-color="#a020c0"/>
-        </radialGradient></defs>
+        <defs><radialGradient id="ov-cc" cx="45%" cy="40%" r="60%"><stop offset="0%" stop-color="#ffb8e8"/><stop offset="100%" stop-color="#a020c0"/></radialGradient></defs>
         <rect x="26" y="40" width="8" height="20" rx="4" fill="#e8c09a"/>
         <rect x="27" y="40" width="3" height="20" rx="1.5" fill="rgba(255,255,255,0.3)"/>
         <circle cx="30" cy="29" r="15" fill="url(#ov-cc)" opacity="0.9"/>
@@ -682,11 +850,8 @@
         <circle cx="23" cy="19" r="5" fill="rgba(255,255,255,0.35)"/>
         <circle cx="37" cy="15" r="3.5" fill="rgba(255,255,255,0.45)"/>
       </svg>`,
-
       sandwich: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
-        <defs><linearGradient id="ov-ics" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#5a3010"/><stop offset="100%" stop-color="#2a1000"/>
-        </linearGradient></defs>
+        <defs><linearGradient id="ov-ics" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#5a3010"/><stop offset="100%" stop-color="#2a1000"/></linearGradient></defs>
         <rect x="6" y="7" width="48" height="14" rx="5" fill="url(#ov-ics)"/>
         <circle cx="17" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
         <circle cx="30" cy="14" r="2.2" fill="rgba(255,255,255,0.18)"/>
@@ -699,35 +864,24 @@
         <circle cx="30" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
         <circle cx="43" cy="46" r="2.2" fill="rgba(255,255,255,0.18)"/>
       </svg>`,
-
       skittle: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
-        <defs><radialGradient id="ov-sk" cx="38%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#e84393"/><stop offset="100%" stop-color="#7b0d5e"/>
-        </radialGradient></defs>
+        <defs><radialGradient id="ov-sk" cx="38%" cy="35%" r="65%"><stop offset="0%" stop-color="#e84393"/><stop offset="100%" stop-color="#7b0d5e"/></radialGradient></defs>
         <ellipse cx="30" cy="57" rx="20" ry="3.5" fill="rgba(0,0,0,0.15)"/>
         <circle cx="30" cy="30" r="26" fill="url(#ov-sk)"/>
-        <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
         <text x="30" y="40" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="26" fill="white">S</text>
         <ellipse cx="22" cy="19" rx="10" ry="5" fill="rgba(255,255,255,0.42)" transform="rotate(-30,22,19)"/>
         <circle cx="38" cy="16" r="3" fill="rgba(255,255,255,0.5)"/>
       </svg>`,
-
       mms: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
-        <defs><radialGradient id="ov-mms" cx="38%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#f7c948"/><stop offset="100%" stop-color="#b86800"/>
-        </radialGradient></defs>
+        <defs><radialGradient id="ov-mms" cx="38%" cy="35%" r="65%"><stop offset="0%" stop-color="#f7c948"/><stop offset="100%" stop-color="#b86800"/></radialGradient></defs>
         <ellipse cx="30" cy="57" rx="20" ry="3.5" fill="rgba(0,0,0,0.15)"/>
         <circle cx="30" cy="30" r="26" fill="url(#ov-mms)"/>
-        <circle cx="30" cy="30" r="26" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
         <text x="30" y="40" text-anchor="middle" font-family="Arial Black,Impact,sans-serif" font-weight="900" font-size="24" fill="white">m</text>
         <ellipse cx="22" cy="19" rx="10" ry="5" fill="rgba(255,255,255,0.45)" transform="rotate(-30,22,19)"/>
         <circle cx="39" cy="16" r="3" fill="rgba(255,255,255,0.5)"/>
       </svg>`,
-
       choc: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
-        <defs><linearGradient id="ov-choc" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#7b3f00"/><stop offset="100%" stop-color="#3d1500"/>
-        </linearGradient></defs>
+        <defs><linearGradient id="ov-choc" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7b3f00"/><stop offset="100%" stop-color="#3d1500"/></linearGradient></defs>
         <rect x="8" y="13" width="46" height="44" rx="6" fill="rgba(0,0,0,0.2)"/>
         <rect x="7" y="11" width="46" height="44" rx="6" fill="url(#ov-choc)"/>
         <line x1="7" y1="26" x2="53" y2="26" stroke="#2a0d00" stroke-width="2.5"/>
@@ -737,22 +891,17 @@
         <rect x="10" y="14" width="7" height="38" rx="3.5" fill="rgba(255,255,255,0.1)"/>
         <rect x="7" y="11" width="46" height="5" rx="4" fill="rgba(255,255,255,0.18)"/>
       </svg>`,
-
       sundae: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
         <path d="M19 39 L14 57 Q14 59 16 59 L44 59 Q46 59 46 57 L41 39 Z" fill="rgba(180,225,255,0.65)" stroke="rgba(140,200,255,0.85)" stroke-width="1.5"/>
         <path d="M21 41 L18 55 L22 55 L24 41 Z" fill="rgba(255,255,255,0.3)"/>
         <ellipse cx="30" cy="39" rx="15" ry="12" fill="#fff8f0"/>
-        <ellipse cx="30" cy="39" rx="9" ry="4" fill="rgba(255,255,255,0.4)"/>
         <circle cx="30" cy="27" r="13" fill="#ffb3c8"/>
         <path d="M24 19 Q26 23 24 27 Q22 31 24 34" fill="none" stroke="#a0522d" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M36 17 Q38 22 36 27" fill="none" stroke="#a0522d" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M30 14 Q34 8 39 10" fill="none" stroke="#4a7c00" stroke-width="2.2" stroke-linecap="round"/>
         <circle cx="39" cy="10" r="5.5" fill="#cc0022"/>
         <circle cx="37.2" cy="8.2" r="1.8" fill="rgba(255,255,255,0.55)"/>
         <ellipse cx="25" cy="24" rx="5" ry="3" fill="rgba(255,255,255,0.38)" transform="rotate(-20,25,24)"/>
-        <ellipse cx="26" cy="36" rx="5" ry="3" fill="rgba(255,255,255,0.3)" transform="rotate(-20,26,36)"/>
       </svg>`,
-
       cake: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="80" height="80">
         <rect x="4" y="41" width="52" height="17" rx="5" fill="#f472b6"/>
         <path d="M4 41 Q10 35 16 41 Q22 47 28 41 Q34 35 40 41 Q46 47 52 41 L56 41 L56 37 Q50 31 44 37 Q38 43 32 37 Q26 31 20 37 Q14 43 8 37 L4 37 Z" fill="white"/>
@@ -770,110 +919,80 @@
         <circle cx="14" cy="50" r="2.5" fill="#ffd200"/>
         <circle cx="30" cy="50" r="2.5" fill="#34d399"/>
         <circle cx="46" cy="50" r="2.5" fill="#f87171"/>
-        <rect x="16" y="29" width="4" height="9" rx="2" fill="rgba(255,255,255,0.2)"/>
       </svg>`
     };
 
-    // ── Game State ──────────────────────────────────────────────────────────
+    // ════════════════════════════════════════════════════════════════════════
+    // GAME STATE
+    // ════════════════════════════════════════════════════════════════════════
     const state = {
       streak: 0,
       totalCorrect: 0,
       questionNum: 1,
       answering: true,
-      collection: { gummy: 0, marshmallow: 0, cotton: 0, sandwich: 0, skittle: 0, mms: 0, choc: 0, sundae: 0, cake: 0 },
+      collection: { gummy:0, marshmallow:0, cotton:0, sandwich:0, skittle:0, mms:0, choc:0, sundae:0, cake:0 },
       pendingOverlay: null,
     };
 
-    // Streak-1 rewards: one is chosen at random each time
     const STREAK_1_REWARDS = [
-      { key: 'gummy',       name: 'Gummy Bear!',          msg: 'You got 1 right — a gummy bear for you!' },
-      { key: 'marshmallow', name: 'Marshmallow!',          msg: 'Soft and sweet — a marshmallow for you!' },
-      { key: 'cotton',      name: 'Cotton Candy!',         msg: 'Fluffy and fun — cotton candy for you!' },
-      { key: 'sandwich',    name: 'Ice Cream Sandwich!',   msg: 'Crispy and creamy — an ice cream sandwich!' },
+      { key:'gummy',       name:'Gummy Bear!',          msg:'You got 1 right — a gummy bear for you!' },
+      { key:'marshmallow', name:'Marshmallow!',          msg:'Soft and sweet — a marshmallow for you!' },
+      { key:'cotton',      name:'Cotton Candy!',         msg:'Fluffy and fun — cotton candy for you!' },
+      { key:'sandwich',    name:'Ice Cream Sandwich!',   msg:'Crispy and creamy — an ice cream sandwich!' },
     ];
 
-    // Streak 2–5 rewards (fixed escalation)
     const STREAK_REWARDS = {
-      2: { key: 'skittle', name: 'Skittle!',           msg: '2 in a row — taste the rainbow!' },
-      3: { key: 'mms',     name: 'M&Ms!',              msg: '3 in a row — melts in your mouth!' },
-      4: { key: 'choc',    name: 'Chocolate!',         msg: '4 in a row — you\'re on fire! 🔥' },
-      5: { key: 'sundae',  name: 'Ice Cream Sundae!!', msg: '5 in a row — WOW, that\'s amazing!!' },
+      2: { key:'skittle', name:'Skittle!',           msg:'2 in a row — taste the rainbow!' },
+      3: { key:'mms',     name:'M&Ms!',              msg:'3 in a row — melts in your mouth!' },
+      4: { key:'choc',    name:'Chocolate!',         msg:"4 in a row — you're on fire! 🔥" },
+      5: { key:'sundae',  name:'Ice Cream Sundae!!', msg:"5 in a row — WOW, that's amazing!!" },
     };
 
-    const CAKE_REWARD = { key: 'cake', name: 'BIRTHDAY CAKE!!', msg: '10 correct answers — YOU DID IT! 🎉🎉🎉' };
+    const CAKE_REWARD = { key:'cake', name:'BIRTHDAY CAKE!!', msg:'10 correct answers — YOU DID IT! 🎉🎉🎉' };
 
-    // ── Difficulty Tier (based on current streak) ───────────────────────────
-    // Tier 0 = Easy, 1 = Medium, 2 = Hard, 3 = Expert
+    // ── Difficulty ──────────────────────────────────────────────────────────
     function getTier() {
       const s = state.streak;
-      if (s <= 2) return 0;
-      if (s <= 5) return 1;
-      if (s <= 9) return 2;
-      return 3;
+      return s <= 2 ? 0 : s <= 5 ? 1 : s <= 9 ? 2 : 3;
     }
 
-    const TIER_LABELS = ['Easy', 'Medium', 'Hard', 'Expert'];
-    const TIER_CLASSES = ['', 'tier-1', 'tier-2', 'tier-3'];
+    const TIER_LABELS  = ['Easy','Medium','Hard','Expert'];
+    const TIER_CLASSES = ['','tier-1','tier-2','tier-3'];
 
     function updateDiffBadge() {
       const t = getTier();
-      const badge = document.getElementById('diffBadge');
-      badge.className = 'diff-badge ' + TIER_CLASSES[t];
+      document.getElementById('diffBadge').className = 'diff-badge ' + TIER_CLASSES[t];
       document.getElementById('diffLabel').textContent = TIER_LABELS[t];
     }
 
     // ── Question Generation ─────────────────────────────────────────────────
-    function rand(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+    function rand(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
     function generateQuestion() {
       const tier = getTier();
       const canMultiply = state.totalCorrect >= 5;
-
-      // Pick operation type
-      const typeMax = canMultiply ? 2 : 1;
-      const type = rand(0, typeMax);
-
+      const type = rand(0, canMultiply ? 2 : 1);
       let a, b, answer, symbol;
 
       if (type === 0) {
-        // Addition: numbers grow with tier
-        const lo = [1,  1,  5, 10][tier];
-        const hi = [10, 15, 20, 30][tier];
-        a = rand(lo, hi); b = rand(lo, hi);
-        answer = a + b; symbol = '+';
-
+        const lo = [1,1,5,10][tier], hi = [10,15,20,30][tier];
+        a = rand(lo,hi); b = rand(lo,hi); answer = a+b; symbol = '+';
       } else if (type === 1) {
-        // Subtraction: range grows with tier, always non-negative
-        const minA = [2,  5,  8, 15][tier];
-        const maxA = [10, 18, 25, 40][tier];
-        a = rand(minA, maxA); b = rand(1, a);
-        answer = a - b; symbol = '−';
-
+        const minA = [2,5,8,15][tier], maxA = [10,18,25,40][tier];
+        a = rand(minA,maxA); b = rand(1,a); answer = a-b; symbol = '−';
       } else {
-        // Multiplication: factor range grows with tier
-        const maxF = [5, 7, 10, 12][tier];
-        a = rand(1, maxF); b = rand(1, maxF);
-        answer = a * b; symbol = '×';
+        const maxF = [5,7,10,12][tier];
+        a = rand(1,maxF); b = rand(1,maxF); answer = a*b; symbol = '×';
       }
 
-      // Scale wrong-answer spread so distractors feel plausible at any difficulty
       const spread = answer >= 30 ? 8 : 5;
       const wrongs = new Set();
-      while (wrongs.size < 3) {
-        const w = answer + rand(-spread, spread);
-        if (w !== answer && w >= 0) wrongs.add(w);
-      }
-
-      return { text: `${a}  ${symbol}  ${b}  = ?`, answer, choices: shuffle([answer, ...wrongs]) };
+      while (wrongs.size < 3) { const w = answer + rand(-spread,spread); if (w!==answer && w>=0) wrongs.add(w); }
+      return { text:`${a}  ${symbol}  ${b}  = ?`, answer, choices:shuffle([answer,...wrongs]) };
     }
 
     function shuffle(arr) {
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = rand(0, i);
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
+      for (let i = arr.length-1; i>0; i--) { const j=rand(0,i); [arr[i],arr[j]]=[arr[j],arr[i]]; }
       return arr;
     }
 
@@ -882,10 +1001,8 @@
       const q = generateQuestion();
       state.currentAnswer = q.answer;
       state.answering = true;
-
       document.getElementById('questionText').textContent = q.text;
       document.getElementById('feedback').textContent = '';
-
       const choicesEl = document.getElementById('choices');
       choicesEl.innerHTML = '';
       q.choices.forEach(c => {
@@ -895,7 +1012,6 @@
         btn.onclick = () => handleAnswer(c, btn);
         choicesEl.appendChild(btn);
       });
-
       document.getElementById('questionNum').textContent = state.questionNum;
       document.getElementById('streakCount').textContent = state.streak;
       document.getElementById('correctCount').textContent = state.totalCorrect;
@@ -904,37 +1020,31 @@
     }
 
     function pulseCandy(key) {
-      const countEl = document.getElementById('cnt-' + key);
-      if (!countEl) return;
-      const item = countEl.closest('.candy-item');
-      if (!item) return;
-      item.classList.remove('pulse');
-      void item.offsetWidth;
-      item.classList.add('pulse');
-      item.addEventListener('animationend', () => item.classList.remove('pulse'), { once: true });
+      const el = document.getElementById('cnt-'+key)?.closest('.candy-item');
+      if (!el) return;
+      el.classList.remove('pulse');
+      void el.offsetWidth;
+      el.classList.add('pulse');
+      el.addEventListener('animationend', () => el.classList.remove('pulse'), { once:true });
     }
 
     function updateCollection() {
-      const c = state.collection;
       ['gummy','marshmallow','cotton','sandwich','skittle','mms','choc','sundae','cake'].forEach(k => {
-        document.getElementById('cnt-' + k).textContent = c[k];
+        document.getElementById('cnt-'+k).textContent = state.collection[k];
       });
-
       const progress = state.totalCorrect % 10;
       const justEarned = state.totalCorrect > 0 && progress === 0;
-      document.getElementById('cakeBar').style.width = (justEarned ? 100 : progress / 10 * 100) + '%';
+      document.getElementById('cakeBar').style.width = (justEarned ? 100 : progress/10*100) + '%';
       document.getElementById('cakeProgressLabel').textContent = justEarned
         ? '🎂 You earned a Birthday Cake! 🎂'
-        : `${progress}/10 correct — ${10 - progress} more for a birthday cake! 🎂`;
+        : `${progress}/10 correct — ${10-progress} more for a birthday cake! 🎂`;
     }
 
     // ── Answer Handling ─────────────────────────────────────────────────────
     function handleAnswer(choice, btn) {
       if (!state.answering) return;
       state.answering = false;
-
       const correct = choice === state.currentAnswer;
-
       document.querySelectorAll('.choice-btn').forEach(b => {
         b.disabled = true;
         if (parseInt(b.textContent) === state.currentAnswer) b.classList.add('correct');
@@ -942,37 +1052,24 @@
 
       if (correct) {
         btn.classList.add('correct');
-        state.streak++;
-        state.totalCorrect++;
-        state.questionNum++;
-
+        state.streak++; state.totalCorrect++; state.questionNum++;
         document.getElementById('feedback').textContent = getCorrectPhrase();
         launchConfetti(14);
 
-        // Determine candy reward
         let reward;
         if (state.streak === 1) {
-          reward = STREAK_1_REWARDS[rand(0, STREAK_1_REWARDS.length - 1)];
+          reward = STREAK_1_REWARDS[rand(0, STREAK_1_REWARDS.length-1)];
         } else {
-          const capped = Math.min(state.streak, 5);
-          reward = STREAK_REWARDS[capped] || null;
+          reward = STREAK_REWARDS[Math.min(state.streak,5)] || null;
         }
-
-        if (reward) {
-          state.collection[reward.key]++;
-          pulseCandy(reward.key);
-        }
+        if (reward) { state.collection[reward.key]++; pulseCandy(reward.key); }
 
         const earnedCake = state.totalCorrect % 10 === 0;
-        if (earnedCake) {
-          state.collection.cake++;
-          pulseCandy('cake');
-        }
-
+        if (earnedCake) { state.collection.cake++; pulseCandy('cake'); }
         updateCollection();
 
         if (earnedCake) {
-          state.pendingOverlay = { ...CAKE_REWARD, extraConfetti: true };
+          state.pendingOverlay = { ...CAKE_REWARD, extraConfetti:true };
           setTimeout(showOverlay, 900);
         } else if (reward) {
           state.pendingOverlay = reward;
@@ -980,7 +1077,6 @@
         } else {
           setTimeout(nextQuestion, 1100);
         }
-
       } else {
         btn.classList.add('wrong');
         state.streak = 0;
@@ -993,25 +1089,21 @@
     }
 
     function getCorrectPhrase() {
-      const phrases = ['Correct! 🎉', 'Amazing! ⭐', 'You got it! 🌟', 'Fantastic! 🎊', 'Super! 🚀', 'Great job! 💫'];
-      return phrases[rand(0, phrases.length - 1)];
+      const p = ['Correct! 🎉','Amazing! ⭐','You got it! 🌟','Fantastic! 🎊','Super! 🚀','Great job! 💫'];
+      return p[rand(0, p.length-1)];
     }
 
     // ── Overlay ─────────────────────────────────────────────────────────────
     function showOverlay() {
       const r = state.pendingOverlay;
       if (!r) return;
-
       const iconEl = document.getElementById('overlayIcon');
       iconEl.innerHTML = CANDY_ICONS[r.key] || '';
       iconEl.classList.toggle('shimmer', !!r.extraConfetti);
-
       document.getElementById('overlayTitle').textContent = r.name;
       document.getElementById('overlayMsg').textContent = r.msg;
       document.getElementById('overlay').classList.add('show');
-
-      if (r.extraConfetti) launchConfetti(70);
-      else launchConfetti(34);
+      launchConfetti(r.extraConfetti ? 70 : 34);
     }
 
     function nextQuestion() {
@@ -1023,51 +1115,40 @@
     // ── Confetti (mixed shapes) ───────────────────────────────────────────────
     function launchConfetti(count) {
       const colors = ['#f7971e','#ffd200','#11998e','#ee0979','#4776e6','#ff6a00','#8e54e9','#38ef7d','#ff6b6b','#fff'];
-      const shapes = ['rect', 'circle', 'triangle', 'star'];
+      const shapes = ['rect','circle','triangle','star'];
       for (let i = 0; i < count; i++) {
         setTimeout(() => {
-          const shape = shapes[rand(0, shapes.length - 1)];
+          const shape = shapes[rand(0,shapes.length-1)];
           const el = document.createElement('div');
           el.className = 'confetti-piece';
-          const size = rand(8, 16);
-          el.style.left = rand(2, 98) + 'vw';
+          const size = rand(8,16);
+          el.style.left = rand(2,98) + 'vw';
           el.style.top = '-20px';
           el.style.width = size + 'px';
           el.style.height = size + 'px';
-          el.style.background = colors[rand(0, colors.length - 1)];
-          el.style.animationDuration = rand(1000, 2800) + 'ms';
+          el.style.background = colors[rand(0,colors.length-1)];
+          el.style.animationDuration = rand(1000,2800) + 'ms';
           el.style.borderRadius = '3px';
-
-          if (shape === 'circle') {
-            el.style.borderRadius = '50%';
-          } else if (shape === 'triangle') {
-            el.style.clipPath = 'polygon(50% 0%, 0% 100%, 100% 100%)';
-            el.style.borderRadius = '0';
-          } else if (shape === 'star') {
-            el.style.clipPath = 'polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)';
-            el.style.borderRadius = '0';
-            const s = size * 1.5;
-            el.style.width = s + 'px';
-            el.style.height = s + 'px';
+          if (shape==='circle') { el.style.borderRadius='50%'; }
+          else if (shape==='triangle') { el.style.clipPath='polygon(50% 0%,0% 100%,100% 100%)'; el.style.borderRadius='0'; }
+          else if (shape==='star') {
+            el.style.clipPath='polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%)';
+            el.style.borderRadius='0';
+            const s=size*1.5; el.style.width=s+'px'; el.style.height=s+'px';
           }
-
           document.body.appendChild(el);
           setTimeout(() => el.remove(), 3500);
         }, i * 50);
       }
     }
 
-    // ── Reset Collection ─────────────────────────────────────────────────────
+    // ── Reset ────────────────────────────────────────────────────────────────
     function resetCollection() {
       if (!confirm('Reset all candy? This cannot be undone!')) return;
-      state.collection = { gummy: 0, marshmallow: 0, cotton: 0, sandwich: 0, skittle: 0, mms: 0, choc: 0, sundae: 0, cake: 0 };
-      state.streak = 0;
-      state.totalCorrect = 0;
-      state.questionNum = 1;
+      state.collection = { gummy:0, marshmallow:0, cotton:0, sandwich:0, skittle:0, mms:0, choc:0, sundae:0, cake:0 };
+      state.streak = 0; state.totalCorrect = 0; state.questionNum = 1;
       document.getElementById('streakFire').style.display = 'none';
-      updateDiffBadge();
-      updateCollection();
-      renderQuestion();
+      updateDiffBadge(); updateCollection(); renderQuestion();
     }
 
     // ── Start ────────────────────────────────────────────────────────────────
