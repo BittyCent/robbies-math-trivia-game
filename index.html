@@ -216,62 +216,71 @@
       color: #4a4a8a;
     }
 
-    /* ── Candy collection — glassmorphism ── */
-    .collection-card {
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 2px solid rgba(255,255,255,0.5);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.4);
-      border-radius: 24px;
-      padding: 20px 28px;
+    /* ── Mini store row on game page ── */
+    .mini-store-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
       width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .mini-cake-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,0,0,0.28);
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 50px;
+      padding: 7px 16px;
       color: #fff;
-    }
-
-    .collection-title {
       font-family: 'Fredoka One', cursive;
-      font-size: 1.4rem;
-      margin-bottom: 14px;
-      text-align: center;
+      font-size: 0.9rem;
+      flex: 1;
+      min-width: 160px;
     }
 
-    .candy-list {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+    .mini-cake-fill-bg {
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      height: 10px;
+      width: 70px;
+      overflow: hidden;
+      flex-shrink: 0;
     }
 
-    .candy-item {
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border: 1px solid rgba(255,255,255,0.35);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 12px rgba(0,0,0,0.1);
-      border-radius: 16px;
-      padding: 10px 8px;
-      text-align: center;
-      font-size: 0.85rem;
-      font-weight: 700;
-      transition: transform 0.2s;
+    .mini-cake-fill {
+      background: linear-gradient(90deg, #f7971e, #ffd200);
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.5s ease;
     }
 
-    .candy-item.pulse { animation: candyPulse 0.45s ease-out; }
-
-    @keyframes candyPulse {
-      0%   { transform: scale(1); }
-      50%  { transform: scale(1.18); }
-      100% { transform: scale(1); }
+    /* Store button on game page */
+    .store-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      padding: 10px 22px;
+      border: 2px solid #c8a030;
+      border-radius: 6px;
+      background: linear-gradient(145deg, #3d1a00, #5a2800);
+      color: #f5d060;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 0 #2a0e00, 0 6px 16px rgba(0,0,0,0.35);
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      letter-spacing: 1px;
+      white-space: nowrap;
     }
 
-    .candy-item .icon  { display: block; margin: 0 auto 4px; }
-    .candy-item .count { font-family: 'Fredoka One', cursive; font-size: 1.4rem; display: block; color: #fff; }
-    .candy-item .label { font-size: 0.78rem; opacity: 0.9; }
+    .store-btn:hover {
+      background: linear-gradient(145deg, #5a2800, #7b3800);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 0 #2a0e00, 0 8px 20px rgba(0,0,0,0.4);
+    }
 
-    .cake-progress { margin-top: 14px; text-align: center; }
-    .cake-progress-label { font-weight: 700; font-size: 0.95rem; margin-bottom: 6px; opacity: 0.9; }
-    .progress-bar-bg  { background: rgba(255,255,255,0.25); border-radius: 20px; height: 18px; overflow: hidden; }
-    .progress-bar-fill { background: linear-gradient(90deg, #f7971e, #ffd200); height: 100%; border-radius: 20px; transition: width 0.5s ease; }
+    .store-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #2a0e00; }
 
     /* ── Overlay ── */
     .overlay {
@@ -671,57 +680,258 @@
       .overlay-card { padding: 28px 24px; }
     }
 
-    /* ── Candy Store Page ── */
+    /* ══════════════════════════════════════════════════════
+       1920s WILLY WONKA SWEET SHOPPE — Store Page
+       ══════════════════════════════════════════════════════ */
+
     #storePage {
       display: none;
       flex-direction: column;
       align-items: center;
-      padding: 20px;
       width: 100%;
       min-height: 100vh;
       position: relative;
       z-index: 1;
-      gap: 24px;
+      /* Warm sepia overlay covers the candy-purple canvas */
+      background: linear-gradient(170deg,
+        #0e0500 0%, #2a1000 15%, #4a2000 32%,
+        #6b3810 50%, #4a2008 68%, #1a0800 100%);
+      padding-bottom: 40px;
     }
 
-    .store-header {
-      text-align: center;
+    /* ── Red-and-white striped awning ── */
+    .store-awning {
       width: 100%;
-      max-width: 800px;
+      overflow: hidden;
+      position: relative;
+      height: 48px;
+      flex-shrink: 0;
+    }
+
+    .awning-stripe {
+      width: 100%;
+      height: 34px;
+      background: repeating-linear-gradient(90deg,
+        #cc1800 0px, #cc1800 38px,
+        #f5ede0 38px, #f5ede0 76px);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.5);
+    }
+
+    .awning-scallop-row {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 18px;
+      /* Alternating red and cream scallops */
+      background:
+        radial-gradient(ellipse 38px 18px at 19px 0%, #cc1800 68%, transparent 69%),
+        radial-gradient(ellipse 38px 18px at 57px 0%, #f5ede0 68%, transparent 69%);
+      background-size: 76px 18px;
+    }
+
+    /* ── Gilt store sign ── */
+    .store-sign-wrap {
+      width: 100%;
+      max-width: 720px;
+      padding: 0 16px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 14px;
+      margin-top: 2px;
     }
 
-    .store-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 2.6rem;
-      color: #fff;
-      text-shadow: 3px 3px 0 #ff6b6b, 6px 6px 0 rgba(0,0,0,0.1);
+    .store-sign {
+      background: linear-gradient(145deg, #0e0500 0%, #1e0a00 50%, #0e0500 100%);
+      border: 3px solid #c8a030;
+      outline: 1px solid #6b4400;
+      outline-offset: 4px;
+      border-radius: 4px;
+      box-shadow:
+        0 0 0 6px #1e0a00,
+        0 0 0 8px #c8a030,
+        0 0 40px rgba(200,160,48,0.45),
+        inset 0 0 60px rgba(255,160,0,0.06);
+      padding: 12px 40px 14px;
       text-align: center;
-      animation: bounce 2s infinite;
-    }
-
-    .store-section {
       width: 100%;
-      max-width: 800px;
+      position: relative;
     }
 
-    .store-section-title {
-      font-family: 'Fredoka One', cursive;
-      font-size: 1.5rem;
-      color: #fff;
-      text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-      margin-bottom: 14px;
-      text-align: center;
+    .store-sign::before, .store-sign::after {
+      content: '❧';
+      position: absolute;
+      top: 10px;
+      font-size: 1.1rem;
+      color: #c8a030;
+      opacity: 0.8;
     }
+    .store-sign::before { left: 14px; }
+    .store-sign::after  { right: 14px; transform: scaleX(-1); display: inline-block; }
+
+    .store-sign-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2rem;
+      color: #f5d060;
+      text-shadow: 0 0 24px rgba(255,200,50,0.6), 2px 2px 0 #5a2a00;
+      letter-spacing: 4px;
+      line-height: 1.1;
+    }
+
+    .store-sign-sub {
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: rgba(200,160,48,0.85);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      margin-top: 3px;
+    }
+
+    /* ── Store scene illustration ── */
+    .store-scene-wrap {
+      width: 100%;
+      max-width: 720px;
+      padding: 0 16px;
+      margin-top: 12px;
+      position: relative;
+    }
+
+    #storeSceneSVG {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 4px 4px 0 0;
+      filter: drop-shadow(0 -2px 8px rgba(200,160,48,0.3));
+    }
+
+    /* Clerk speech bubble overlaid on SVG */
+    .clerk-bubble {
+      position: absolute;
+      background: #f5e6c4;
+      border: 2px solid #8b5010;
+      border-radius: 10px 10px 10px 0;
+      padding: 5px 11px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 900;
+      color: #2d1000;
+      max-width: 120px;
+      text-align: center;
+      /* Position near clerk's head — fine-tuned to SVG layout */
+      top: 12%;
+      left: 34%;
+      box-shadow: 2px 3px 8px rgba(0,0,0,0.4);
+      animation: bubbleFloat 3.5s ease-in-out infinite alternate;
+      z-index: 2;
+      line-height: 1.3;
+    }
+
+    @keyframes bubbleFloat {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
+
+    /* ── Counter area (jars displayed on wooden counter) ── */
+    .store-counter-area {
+      width: 100%;
+      max-width: 720px;
+      padding: 0 16px;
+    }
+
+    .counter-surface {
+      background: linear-gradient(180deg, #7b4010 0%, #5a2a00 40%, #3d1800 100%);
+      border-left: 3px solid #c8a030;
+      border-right: 3px solid #c8a030;
+      padding: 14px 20px 18px;
+      position: relative;
+    }
+
+    /* Gold rail along the top edge of the counter */
+    .counter-surface::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #8b6010, #f5d060 30%, #c8a030 50%, #f5d060 70%, #8b6010);
+    }
+
+    .counter-front {
+      background: linear-gradient(180deg, #3d1800 0%, #1e0a00 100%);
+      border: 3px solid #c8a030;
+      border-top: none;
+      border-radius: 0 0 6px 6px;
+      height: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Ornamental panel divisions on counter front */
+    .counter-front::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg,
+        transparent 0px, transparent 58px,
+        rgba(200,160,48,0.3) 58px, rgba(200,160,48,0.3) 60px);
+    }
+
+    /* ── Floor / lower panels ── */
+    .store-floor {
+      width: 100%;
+      max-width: 720px;
+      padding: 0 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    /* Aged wood panel used for all floor sections */
+    .store-panel {
+      background:
+        repeating-linear-gradient(90deg,
+          transparent 0px, transparent 3px,
+          rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px),
+        linear-gradient(160deg, #2d1200 0%, #1a0800 60%, #2d1200 100%);
+      border: 2px solid #c8a030;
+      border-radius: 6px;
+      padding: 16px 18px;
+      position: relative;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(200,160,48,0.25);
+    }
+
+    /* Brass corner bolts */
+    .store-panel::before {
+      content: '';
+      position: absolute;
+      top: 6px; left: 6px;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #f5d060, #c8900a);
+      box-shadow: calc(100% + 2px) 0 0 -2px rgba(200,160,48,0.6),
+                  0 calc(100% + 2px) 0 -2px rgba(200,160,48,0.6);
+    }
+
+    .store-panel-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.95rem;
+      color: #f5d060;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 14px;
+      text-shadow: 0 0 16px rgba(245,208,96,0.4);
+      opacity: 0.9;
+    }
+    .store-panel-title::before { content: '— '; }
+    .store-panel-title::after  { content: ' —'; }
 
     /* ── Candy Jars ── */
     .jar-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 18px;
+      gap: 14px;
       justify-content: center;
     }
 
@@ -729,28 +939,31 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .jar-svg { position: relative; }
 
     .jar-count-badge {
       font-family: 'Fredoka One', cursive;
-      font-size: 1.1rem;
-      color: #fff;
-      background: rgba(0,0,0,0.45);
-      border: 2px solid rgba(255,255,255,0.5);
-      border-radius: 20px;
-      padding: 2px 12px;
-      min-width: 36px;
+      font-size: 0.95rem;
+      color: #f5d060;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(200,160,48,0.6);
+      border-radius: 12px;
+      padding: 1px 10px;
+      min-width: 32px;
       text-align: center;
     }
 
     .jar-label {
-      font-family: 'Fredoka One', cursive;
-      font-size: 0.9rem;
-      color: rgba(255,255,255,0.9);
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 900;
+      color: rgba(245,208,96,0.7);
       text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
     }
 
     .jar-card.jar-overflow .jar-svg::after {
@@ -759,28 +972,38 @@
       top: -18px;
       left: 50%;
       transform: translateX(-50%);
-      font-size: 1.2rem;
+      font-size: 1rem;
       animation: jarSparkle 1s ease-in-out infinite alternate;
     }
 
     @keyframes jarSparkle {
-      0%   { transform: translateX(-50%) translateY(0) scale(0.8); opacity: 0.7; }
+      0%   { transform: translateX(-50%) translateY(0) scale(0.8); opacity: 0.6; }
       100% { transform: translateX(-50%) translateY(-8px) scale(1.2); opacity: 1; }
     }
 
-    /* ── Cotton Candy Corner ── */
-    .cotton-corner {
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 2px solid rgba(255,255,255,0.4);
-      border-radius: 24px;
-      padding: 24px;
+    /* ── Feature row: cotton candy + lollipop ── */
+    .feature-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .feature-panel {
+      flex: 1;
+      min-width: 180px;
+      background:
+        repeating-linear-gradient(90deg,
+          transparent 0px, transparent 3px,
+          rgba(0,0,0,0.06) 3px, rgba(0,0,0,0.06) 4px),
+        linear-gradient(160deg, #2d1200 0%, #1a0800 60%, #2d1200 100%);
+      border: 2px solid #c8a030;
+      border-radius: 6px;
+      padding: 14px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 12px;
-      width: 100%;
+      gap: 10px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.5), inset 0 1px 0 rgba(200,160,48,0.25);
     }
 
     .cotton-icon-wrap {
@@ -790,26 +1013,11 @@
       transition: transform 0.6s ease;
     }
 
-    /* ── Lollipop Centerpiece ── */
-    .lollipop-centerpiece {
-      background: rgba(255,255,255,0.12);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 2px solid rgba(255,215,0,0.5);
-      border-radius: 24px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 14px;
-      width: 100%;
-      box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 8px 32px rgba(0,0,0,0.2);
-    }
-
+    /* ── Lollipop bouquet ── */
     .bouquet-container {
       position: relative;
-      width: 260px;
-      height: 200px;
+      width: 220px;
+      height: 170px;
     }
 
     .bouquet-container.sway {
@@ -827,66 +1035,82 @@
     }
 
     .lollipop-empty-label {
+      position: absolute;
+      top: 14px;
+      width: 100%;
+      text-align: center;
       font-style: italic;
-      color: rgba(255,255,255,0.6);
-      font-size: 0.9rem;
+      color: rgba(245,208,96,0.45);
+      font-size: 0.82rem;
+      font-family: 'Nunito', sans-serif;
     }
 
     .bouquet-overflow {
       font-family: 'Fredoka One', cursive;
-      font-size: 0.85rem;
-      color: #fff;
-      background: rgba(255,100,0,0.7);
-      border-radius: 14px;
-      padding: 2px 10px;
+      font-size: 0.78rem;
+      color: #f5d060;
+      background: rgba(80,30,0,0.85);
+      border: 1px solid #c8a030;
+      border-radius: 10px;
+      padding: 2px 8px;
       position: absolute;
-      bottom: 62px;
-      right: 14px;
+      bottom: 48px;
+      right: 10px;
     }
 
-    /* ── Glass Display Case ── */
+    /* ── Glass display case ── */
     .display-case {
-      background: rgba(20,10,50,0.5);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 2px solid rgba(255,255,255,0.25);
-      border-radius: 24px;
-      padding: 20px;
-      width: 100%;
+      background: linear-gradient(180deg,
+        rgba(210,235,255,0.07) 0%,
+        rgba(180,215,255,0.03) 100%);
+      border: 1px solid rgba(200,225,255,0.3);
+      border-radius: 4px;
       overflow: hidden;
+      box-shadow:
+        inset 0 0 40px rgba(200,230,255,0.04),
+        0 0 0 4px rgba(0,0,0,0.4),
+        0 0 0 6px #c8a030;
+    }
+
+    .display-case-bar {
+      height: 10px;
+      background: linear-gradient(90deg, #3d1800, #7b4010 25%, #c8a030 50%, #7b4010 75%, #3d1800);
     }
 
     .shelf {
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 14px 0;
+      padding: 9px 14px;
     }
 
     .shelf + .shelf {
-      border-top: 1px solid rgba(255,255,255,0.18);
+      border-top: 1px solid rgba(200,225,255,0.12);
     }
 
     .shelf-label {
-      font-family: 'Fredoka One', cursive;
-      font-size: 0.85rem;
-      color: rgba(255,255,255,0.8);
-      min-width: 80px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.68rem;
+      font-weight: 900;
+      color: rgba(245,208,96,0.7);
+      min-width: 100px;
       text-align: right;
       flex-shrink: 0;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .shelf-items {
       display: flex;
       flex-wrap: wrap;
-      gap: 6px;
+      gap: 5px;
       align-items: center;
       flex: 1;
     }
 
     .shelf-item {
-      width: 40px;
-      height: 40px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -894,39 +1118,58 @@
 
     .shelf-overflow {
       font-family: 'Fredoka One', cursive;
-      font-size: 0.85rem;
-      color: #fff;
-      background: rgba(255,100,0,0.7);
-      border-radius: 14px;
-      padding: 3px 10px;
+      font-size: 0.78rem;
+      color: #f5d060;
+      background: rgba(80,30,0,0.85);
+      border: 1px solid #c8a030;
+      border-radius: 10px;
+      padding: 2px 8px;
     }
 
     .shelf-empty {
       font-style: italic;
-      color: rgba(255,255,255,0.4);
-      font-size: 0.85rem;
+      color: rgba(245,208,96,0.28);
+      font-size: 0.8rem;
+      font-family: 'Nunito', sans-serif;
     }
 
-    /* ── Store button on game page ── */
-    .store-btn {
+    /* ── Store footer buttons ── */
+    .store-footer {
+      width: 100%;
+      max-width: 720px;
+      padding: 14px 16px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .back-btn {
       font-family: 'Fredoka One', cursive;
       font-size: 1rem;
       padding: 10px 24px;
-      border: 2px solid rgba(255,215,0,0.7);
-      border-radius: 50px;
-      background: rgba(255,215,0,0.18);
-      color: #fff;
+      border: 2px solid #c8a030;
+      border-radius: 4px;
+      background: linear-gradient(145deg, #1e0a00, #3d1800);
+      color: #f5d060;
       cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
+      box-shadow: 0 4px 0 #0e0500, 0 6px 14px rgba(0,0,0,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 1px;
     }
 
-    .store-btn:hover { background: rgba(255,215,0,0.35); transform: scale(1.05); }
+    .back-btn:hover  { transform: translateY(-2px); box-shadow: 0 6px 0 #0e0500, 0 8px 18px rgba(0,0,0,0.45); }
+    .back-btn:active { transform: translateY(2px);  box-shadow: 0 2px 0 #0e0500; }
 
     @media (max-width: 480px) {
-      .store-title { font-size: 1.9rem; }
-      .jar-row { gap: 12px; }
-      .bouquet-container { width: 220px; }
-      .shelf-label { min-width: 58px; font-size: 0.75rem; }
+      .store-sign-title { font-size: 1.4rem; letter-spacing: 2px; }
+      .store-sign-sub { font-size: 0.6rem; }
+      .jar-row { gap: 10px; }
+      .bouquet-container { width: 180px; height: 140px; }
+      .shelf-label { min-width: 72px; }
+      .feature-row { flex-direction: column; align-items: stretch; }
+      .feature-panel { min-width: 0; align-items: center; }
+      .clerk-bubble { font-size: 0.65rem; left: 32%; max-width: 100px; }
     }
   </style>
 </head>
@@ -964,9 +1207,20 @@
         <div class="feedback" id="feedback"></div>
       </div>
 
-      <!-- Candy collection — 9 items (3×3) -->
-      <div class="collection-card">
-        <div class="collection-title">🍬 Your Candy Collection 🍬</div>
+      <!-- Mini progress + store button -->
+      <div class="mini-store-row">
+        <div class="mini-cake-bar">
+          🎂
+          <div class="mini-cake-fill-bg">
+            <div class="mini-cake-fill" id="cakeBar" style="width:0%"></div>
+          </div>
+          <span id="cakeProgressLabel">0/10</span>
+        </div>
+        <button class="store-btn" onclick="showStore()">🍬 My Candy Store</button>
+      </div>
+
+      <!-- Hidden candy counts (kept for JS compatibility) -->
+      <div style="display:none">
         <div class="candy-list">
 
           <div class="candy-item">
@@ -1170,75 +1424,323 @@
           </div>
 
         </div>
-
-        <div class="cake-progress">
-          <div class="cake-progress-label" id="cakeProgressLabel">0/10 correct — keep going for a birthday cake! 🎂</div>
-          <div class="progress-bar-bg">
-            <div class="progress-bar-fill" id="cakeBar" style="width:0%"></div>
-          </div>
-        </div>
-
-        <div style="text-align:center; margin-top:16px;">
-          <button class="store-btn" onclick="showStore()">🍬 My Candy Store</button>
-        </div>
-      </div>
+      </div><!-- /hidden candy counts -->
 
     </div>
   </div><!-- /gameContent -->
 
-  <!-- Candy Store Page -->
+  <!-- ═══════════════════════════════════════════════════════
+       ROBBIE'S SWEET SHOPPE — 1920s Willy Wonka Store Page
+       ═══════════════════════════════════════════════════════ -->
   <div id="storePage">
-    <div class="store-header">
-      <div class="store-title">🍭 Robbie's Candy Store 🍭</div>
-      <button class="reset-btn" onclick="showGame()">← Back to Game</button>
+
+    <!-- Red-and-white striped awning -->
+    <div class="store-awning">
+      <div class="awning-stripe"></div>
+      <div class="awning-scallop-row"></div>
     </div>
 
-    <!-- Section 1: Candy Jars -->
-    <div class="store-section">
-      <div class="store-section-title">🫙 Candy Jars</div>
-      <div class="jar-row" id="jarRow"></div>
-    </div>
-
-    <!-- Section 2: Cotton Candy Corner -->
-    <div class="store-section">
-      <div class="store-section-title">🍬 Cotton Candy Corner</div>
-      <div class="cotton-corner">
-        <div class="cotton-icon-wrap" id="cottonIconWrap"></div>
-        <div class="jar-count-badge" id="cottonStoreBadge">0</div>
-        <div class="jar-label">Cotton Candies</div>
+    <!-- Ornate gilt sign -->
+    <div class="store-sign-wrap">
+      <div class="store-sign">
+        <div class="store-sign-title">ROBBIE'S SWEET SHOPPE</div>
+        <div class="store-sign-sub">Est. 1922 &nbsp;✦&nbsp; Wonka Certified &nbsp;✦&nbsp; Fine Confections</div>
       </div>
     </div>
 
-    <!-- Section 3: Lollipop Centerpiece -->
-    <div class="store-section">
-      <div class="store-section-title">🍭 Lollipop Centerpiece</div>
-      <div class="lollipop-centerpiece">
-        <div class="bouquet-container" id="bouquetContainer"></div>
+    <!-- Store interior scene: walls, clerk, cash register, decor -->
+    <div class="store-scene-wrap">
+      <svg id="storeSceneSVG" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 210">
+        <defs>
+          <linearGradient id="sg-wall" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#c89060"/>
+            <stop offset="55%" stop-color="#9a6030"/>
+            <stop offset="100%" stop-color="#6b3808"/>
+          </linearGradient>
+          <linearGradient id="sg-floor" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#3d1a00"/>
+            <stop offset="100%" stop-color="#160800"/>
+          </linearGradient>
+          <linearGradient id="sg-counter" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#9b5510"/>
+            <stop offset="40%" stop-color="#6b3508"/>
+            <stop offset="100%" stop-color="#3d1800"/>
+          </linearGradient>
+          <linearGradient id="sg-register" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#e0b845"/>
+            <stop offset="55%" stop-color="#c89010"/>
+            <stop offset="100%" stop-color="#906000"/>
+          </linearGradient>
+          <radialGradient id="sg-lamp" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="rgba(255,220,130,0.65)"/>
+            <stop offset="100%" stop-color="rgba(255,180,60,0)"/>
+          </radialGradient>
+          <radialGradient id="sg-skin" cx="45%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#ffd5a0"/>
+            <stop offset="100%" stop-color="#e8a060"/>
+          </radialGradient>
+        </defs>
+
+        <!-- WALL -->
+        <rect x="0" y="0" width="680" height="148" fill="url(#sg-wall)"/>
+
+        <!-- Wainscoting / lower wall panel strip -->
+        <rect x="0" y="110" width="680" height="38" fill="#5a2800"/>
+        <line x1="0" y1="110" x2="680" y2="110" stroke="#c8a030" stroke-width="3.5"/>
+        <line x1="0" y1="114" x2="680" y2="114" stroke="rgba(255,200,80,0.18)" stroke-width="1"/>
+        <!-- Panel grooves -->
+        <rect x="8"   y="116" width="88"  height="26" rx="2" fill="none" stroke="rgba(200,160,48,0.22)" stroke-width="1.5"/>
+        <rect x="106" y="116" width="88"  height="26" rx="2" fill="none" stroke="rgba(200,160,48,0.22)" stroke-width="1.5"/>
+        <rect x="204" y="116" width="88"  height="26" rx="2" fill="none" stroke="rgba(200,160,48,0.22)" stroke-width="1.5"/>
+        <rect x="302" y="116" width="88"  height="26" rx="2" fill="none" stroke="rgba(200,160,48,0.22)" stroke-width="1.5"/>
+        <rect x="400" y="116" width="88"  height="26" rx="2" fill="none" stroke="rgba(200,160,48,0.22)" stroke-width="1.5"/>
+        <rect x="498" y="116" width="88"  height="26" rx="2" fill="none" stroke="rgba(200,160,48,0.22)" stroke-width="1.5"/>
+        <rect x="596" y="116" width="78"  height="26" rx="2" fill="none" stroke="rgba(200,160,48,0.22)" stroke-width="1.5"/>
+
+        <!-- FLOOR -->
+        <rect x="0" y="148" width="680" height="62" fill="url(#sg-floor)"/>
+        <line x1="0" y1="164" x2="680" y2="164" stroke="rgba(80,36,0,0.55)" stroke-width="1.5"/>
+        <line x1="0" y1="180" x2="680" y2="180" stroke="rgba(80,36,0,0.55)" stroke-width="1.5"/>
+        <line x1="0" y1="196" x2="680" y2="196" stroke="rgba(80,36,0,0.45)" stroke-width="1"/>
+        <line x1="90"  y1="148" x2="90"  y2="210" stroke="rgba(80,36,0,0.28)" stroke-width="1"/>
+        <line x1="210" y1="148" x2="210" y2="210" stroke="rgba(80,36,0,0.28)" stroke-width="1"/>
+        <line x1="330" y1="148" x2="330" y2="210" stroke="rgba(80,36,0,0.28)" stroke-width="1"/>
+        <line x1="450" y1="148" x2="450" y2="210" stroke="rgba(80,36,0,0.28)" stroke-width="1"/>
+        <line x1="570" y1="148" x2="570" y2="210" stroke="rgba(80,36,0,0.28)" stroke-width="1"/>
+
+        <!-- COUNTER surface line -->
+        <line x1="0" y1="148" x2="680" y2="148" stroke="#c8a030" stroke-width="3"/>
+        <line x1="0" y1="151" x2="680" y2="151" stroke="rgba(255,200,80,0.2)" stroke-width="1"/>
+
+        <!-- ── LEFT GAS LAMP SCONCE ── -->
+        <rect x="36" y="22" width="5" height="44" rx="2.5" fill="#8b6010"/>
+        <ellipse cx="38.5" cy="20" rx="11" ry="5" fill="#c8a030"/>
+        <ellipse cx="38.5" cy="18" rx="7.5" ry="13" fill="rgba(255,220,100,0.3)"/>
+        <circle cx="38.5" cy="18" r="14" fill="url(#sg-lamp)"/>
+        <text x="38" y="28" text-anchor="middle" font-size="16">🕯</text>
+
+        <!-- ── RIGHT GAS LAMP SCONCE ── -->
+        <rect x="639" y="22" width="5" height="44" rx="2.5" fill="#8b6010"/>
+        <ellipse cx="641.5" cy="20" rx="11" ry="5" fill="#c8a030"/>
+        <ellipse cx="641.5" cy="18" rx="7.5" ry="13" fill="rgba(255,220,100,0.3)"/>
+        <circle cx="641.5" cy="18" r="14" fill="url(#sg-lamp)"/>
+        <text x="641" y="28" text-anchor="middle" font-size="16">🕯</text>
+
+        <!-- ── CHALKBOARD (center wall) ── -->
+        <rect x="242" y="6" width="196" height="76" rx="5" fill="#160800" stroke="#c8a030" stroke-width="3.5"/>
+        <rect x="248" y="12" width="184" height="64" rx="3" fill="#0b0400" stroke="rgba(200,160,48,0.35)" stroke-width="1"/>
+        <text x="340" y="32" text-anchor="middle" font-family="'Fredoka One',cursive" font-size="13" fill="#f5d060" opacity="0.95" letter-spacing="2">TODAY'S SPECIALS</text>
+        <line x1="262" y1="38" x2="418" y2="38" stroke="rgba(245,208,96,0.28)" stroke-width="1"/>
+        <text x="340" y="52" text-anchor="middle" font-family="'Nunito',sans-serif" font-size="9" font-weight="700" fill="rgba(245,208,96,0.72)" letter-spacing="1">🍭 EARN CANDY WITH MATH 🍭</text>
+        <text x="340" y="65" text-anchor="middle" font-family="'Nunito',sans-serif" font-size="8" fill="rgba(245,208,96,0.48)" letter-spacing="1">WONKA'S FINEST  •  QUALITY GUARANTEED</text>
+        <!-- Chalk marks -->
+        <line x1="264" y1="72" x2="278" y2="72" stroke="rgba(245,208,96,0.22)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="264" y1="72" x2="264" y2="68" stroke="rgba(245,208,96,0.22)" stroke-width="1.5" stroke-linecap="round"/>
+
+        <!-- ── LEFT WALL DECOR: candy-stripe barber pole ── -->
+        <rect x="99" y="38" width="9" height="72" rx="4.5" fill="#f5f0e8"/>
+        <path d="M99 38 Q108 46 99 54 Q108 62 99 70 Q108 78 99 86 Q108 94 99 102 Q108 110 99 110" fill="none" stroke="#cc1800" stroke-width="4" stroke-linecap="round"/>
+        <ellipse cx="103.5" cy="37" rx="9" ry="4.5" fill="#c8a030"/>
+        <ellipse cx="103.5" cy="111" rx="9" ry="4.5" fill="#c8a030"/>
+
+        <!-- ── RIGHT WALL DECOR: Wonka medallion ── -->
+        <circle cx="572" cy="58" r="38" fill="none" stroke="#c8a030" stroke-width="2.5"/>
+        <circle cx="572" cy="58" r="34" fill="none" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <circle cx="572" cy="58" r="31" fill="rgba(14,5,0,0.82)"/>
+        <text x="572" y="47" text-anchor="middle" font-family="'Fredoka One',cursive" font-size="11" fill="#f5d060" letter-spacing="2">WONKA'S</text>
+        <text x="572" y="59" text-anchor="middle" font-family="'Fredoka One',cursive" font-size="9" fill="rgba(200,160,48,0.85)" letter-spacing="1">CERTIFIED</text>
+        <text x="572" y="75" text-anchor="middle" font-size="18">🎩</text>
+        <!-- Medallion stars -->
+        <text x="548" y="48" font-size="7" fill="#c8a030" opacity="0.7">★</text>
+        <text x="594" y="48" font-size="7" fill="#c8a030" opacity="0.7">★</text>
+        <text x="548" y="70" font-size="7" fill="#c8a030" opacity="0.7">★</text>
+        <text x="594" y="70" font-size="7" fill="#c8a030" opacity="0.7">★</text>
+
+        <!-- ── STORE CLERK ── -->
+        <!-- Legs -->
+        <rect x="162" y="170" width="10" height="36" rx="5" fill="#1a0a00"/>
+        <rect x="178" y="170" width="10" height="36" rx="5" fill="#1a0a00"/>
+        <!-- Shoes -->
+        <ellipse cx="167" cy="206" rx="9" ry="5" fill="#0d0500"/>
+        <ellipse cx="183" cy="206" rx="9" ry="5" fill="#0d0500"/>
+        <!-- Body / apron -->
+        <ellipse cx="175" cy="158" rx="24" ry="22" fill="#f5f0e8"/>
+        <!-- Striped vest underneath -->
+        <ellipse cx="175" cy="152" rx="15" ry="16" fill="#7b1050"/>
+        <line x1="169" y1="138" x2="167" y2="168" stroke="rgba(245,240,232,0.55)" stroke-width="2.5"/>
+        <line x1="175" y1="136" x2="175" y2="170" stroke="rgba(245,240,232,0.55)" stroke-width="2.5"/>
+        <line x1="181" y1="138" x2="183" y2="168" stroke="rgba(245,240,232,0.55)" stroke-width="2.5"/>
+        <!-- Apron front -->
+        <path d="M160 150 L162 174 L188 174 L190 150 Q182 155 175 154 Q168 155 160 150Z" fill="rgba(245,240,232,0.92)"/>
+        <!-- Apron strings tied behind -->
+        <path d="M162 152 Q156 155 155 162" fill="none" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+        <path d="M188 152 Q194 155 195 162" fill="none" stroke="#f5f0e8" stroke-width="2" stroke-linecap="round"/>
+        <!-- Neck -->
+        <rect x="172" y="124" width="7" height="16" rx="3.5" fill="url(#sg-skin)"/>
+        <!-- Head -->
+        <circle cx="175.5" cy="111" r="17" fill="url(#sg-skin)"/>
+        <!-- Rosy cheeks -->
+        <circle cx="163" cy="114" r="4.5" fill="rgba(240,120,80,0.3)"/>
+        <circle cx="188" cy="114" r="4.5" fill="rgba(240,120,80,0.3)"/>
+        <!-- Friendly smile -->
+        <path d="M167 118 Q175.5 125 184 118" fill="none" stroke="#c06040" stroke-width="2" stroke-linecap="round"/>
+        <!-- Moustache -->
+        <path d="M169 114 Q172.5 117 175.5 115 Q178.5 117 182 114" fill="none" stroke="#5a2800" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Round spectacles -->
+        <circle cx="168" cy="108" r="6" fill="none" stroke="#7b4010" stroke-width="1.8"/>
+        <circle cx="183" cy="108" r="6" fill="none" stroke="#7b4010" stroke-width="1.8"/>
+        <line x1="174" y1="108" x2="177" y2="108" stroke="#7b4010" stroke-width="1.8"/>
+        <line x1="162" y1="107" x2="160" y2="105" stroke="#7b4010" stroke-width="1.8"/>
+        <line x1="189" y1="107" x2="191" y2="105" stroke="#7b4010" stroke-width="1.8"/>
+        <!-- Eyes behind spectacles -->
+        <circle cx="168" cy="107" r="2.2" fill="#2d1000"/>
+        <circle cx="183" cy="107" r="2.2" fill="#2d1000"/>
+        <circle cx="169" cy="106.2" r="0.8" fill="rgba(255,255,255,0.9)"/>
+        <circle cx="184" cy="106.2" r="0.8" fill="rgba(255,255,255,0.9)"/>
+        <!-- Ear -->
+        <ellipse cx="158.5" cy="111" rx="3.5" ry="5" fill="url(#sg-skin)"/>
+        <ellipse cx="192.5" cy="111" rx="3.5" ry="5" fill="url(#sg-skin)"/>
+        <!-- Red bowtie -->
+        <path d="M166 131 L175.5 135 L185 131 L175.5 127 Z" fill="#cc1800"/>
+        <circle cx="175.5" cy="131" r="3" fill="#aa1200"/>
+        <rect x="174" y="128" width="3" height="7" rx="1.5" fill="#dd2200" opacity="0.6"/>
+        <!-- WONKA TOP HAT 🎩 -->
+        <rect x="162" y="88" width="27" height="20" rx="2" fill="#2d0a5c"/>
+        <!-- Hat highlight -->
+        <rect x="163" y="89" width="5" height="18" rx="2.5" fill="rgba(255,255,255,0.08)"/>
+        <!-- Hat brim -->
+        <rect x="158" y="106" width="35" height="4" rx="2" fill="#3d1280"/>
+        <rect x="159" y="106" width="33" height="2" rx="1" fill="rgba(255,255,255,0.12)"/>
+        <!-- Gold hat band -->
+        <rect x="162" y="99" width="27" height="6" fill="#c8a030" opacity="0.8"/>
+        <line x1="162" y1="102" x2="189" y2="102" stroke="rgba(255,240,180,0.4)" stroke-width="1"/>
+        <!-- Hat feather / accent -->
+        <path d="M189 96 Q196 90 194 84 Q192 88 188 92" fill="none" stroke="#9b2fc0" stroke-width="2" stroke-linecap="round"/>
+        <!-- Arm extending right, holding candy -->
+        <path d="M198 152 Q214 145 222 140" fill="none" stroke="url(#sg-skin)" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="224" cy="138" r="7" fill="url(#sg-skin)"/>
+        <!-- Lollipop in hand -->
+        <rect x="222" y="118" width="4" height="22" rx="2" fill="#d4a870"/>
+        <rect x="222.5" y="118" width="1.5" height="22" rx="0.7" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="224" cy="116" r="9" fill="#ff2255"/>
+        <path d="M224 116 L224 107 A9 9 0 0 1 231.8 120.5 Z" fill="#ff8800"/>
+        <path d="M224 116 L231.8 120.5 A9 9 0 0 1 216.2 120.5 Z" fill="#ffdd00"/>
+        <ellipse cx="220" cy="109" rx="4" ry="2.5" fill="rgba(255,255,255,0.38)" transform="rotate(-30,220,109)"/>
+
+        <!-- ── VINTAGE CASH REGISTER ── -->
+        <!-- Shadow -->
+        <ellipse cx="430" cy="174" rx="44" ry="6" fill="rgba(0,0,0,0.35)"/>
+        <!-- Legs / base -->
+        <rect x="398" y="164" width="64" height="12" rx="3" fill="#7b4800"/>
+        <rect x="402" y="174" width="8" height="6" rx="2" fill="#6b3800"/>
+        <rect x="446" y="174" width="8" height="6" rx="2" fill="#6b3800"/>
+        <!-- Main body -->
+        <rect x="395" y="122" width="70" height="46" rx="5" fill="url(#sg-register)"/>
+        <!-- Body highlight -->
+        <rect x="397" y="124" width="9" height="42" rx="4.5" fill="rgba(255,255,255,0.16)"/>
+        <!-- Top dome -->
+        <ellipse cx="430" cy="122" rx="35" ry="11" fill="#d4a843"/>
+        <ellipse cx="430" cy="121" rx="30" ry="8" fill="#c89010"/>
+        <!-- Dome shine -->
+        <ellipse cx="420" cy="119" rx="10" ry="3" fill="rgba(255,255,255,0.2)" transform="rotate(-15,420,119)"/>
+        <!-- Amount display panel -->
+        <rect x="406" y="100" width="48" height="24" rx="3" fill="#160800" stroke="#c8a030" stroke-width="1.5"/>
+        <rect x="408" y="102" width="44" height="20" rx="2" fill="#001200"/>
+        <text x="430" y="116" text-anchor="middle" font-family="'Courier New',monospace" font-size="11" fill="#00ff55" letter-spacing="1">$0.00</text>
+        <!-- Display neck -->
+        <rect x="426" y="122" width="8" height="8" fill="#a07000"/>
+        <!-- Key rows -->
+        <rect x="399" y="133" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="413" y="133" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="427" y="133" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="441" y="133" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="455" y="133" width="11" height="9" rx="2.5" fill="#aa2000" stroke="rgba(200,60,0,0.5)" stroke-width="1"/>
+        <rect x="399" y="145" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="413" y="145" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="427" y="145" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="441" y="145" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <rect x="455" y="145" width="11" height="9" rx="2.5" fill="#6b3800" stroke="rgba(200,160,48,0.3)" stroke-width="1"/>
+        <!-- Cash drawer -->
+        <rect x="397" y="157" width="66" height="9" rx="2" fill="#8b5010" stroke="#c8a030" stroke-width="1"/>
+        <rect x="399" y="158" width="62" height="3" rx="1" fill="rgba(255,255,255,0.08)"/>
+        <!-- Drawer pull knob -->
+        <ellipse cx="430" cy="161.5" rx="6" ry="2.5" fill="#c8a030"/>
+        <ellipse cx="430" cy="161" rx="4" ry="1.5" fill="#f5d060"/>
+        <!-- Receipt tape -->
+        <rect x="424" y="90" width="12" height="12" rx="3" fill="#f5f0e8" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+        <path d="M430 90 L430 80 Q430 76 430 76" fill="none" stroke="#f5f0e8" stroke-width="4" stroke-linecap="round"/>
+        <line x1="426" y1="86" x2="434" y2="86" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+        <line x1="426" y1="83" x2="434" y2="83" stroke="rgba(0,0,0,0.15)" stroke-width="1"/>
+        <line x1="426" y1="80" x2="434" y2="80" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
+
+        <!-- Tiny candy jars as decor on counter (right side) -->
+        <rect x="580" y="132" width="16" height="20" rx="3" fill="rgba(200,230,255,0.22)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+        <rect x="580" y="138" width="16" height="14" rx="0" fill="rgba(255,120,0,0.4)" clip-path="none"/>
+        <rect x="578" y="130" width="20" height="5" rx="2" fill="#b0b8c8"/>
+        <rect x="601" y="132" width="16" height="20" rx="3" fill="rgba(200,230,255,0.22)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+        <rect x="601" y="142" width="16" height="10" rx="0" fill="rgba(200,50,150,0.4)"/>
+        <rect x="599" y="130" width="20" height="5" rx="2" fill="#b0b8c8"/>
+        <rect x="622" y="132" width="16" height="20" rx="3" fill="rgba(200,230,255,0.22)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+        <rect x="622" y="145" width="16" height="7" rx="0" fill="rgba(100,200,100,0.4)"/>
+        <rect x="620" y="130" width="20" height="5" rx="2" fill="#b0b8c8"/>
+
+      </svg>
+
+      <!-- Animated speech bubble from clerk -->
+      <div class="clerk-bubble" id="clerkBubble">Welcome, young mathematician!</div>
+    </div>
+
+    <!-- Counter surface: candy jar display -->
+    <div class="store-counter-area">
+      <div class="counter-surface">
+        <div class="store-panel-title">Candy Jar Collection</div>
+        <div class="jar-row" id="jarRow"></div>
+      </div>
+      <div class="counter-front"></div>
+    </div>
+
+    <!-- Floor: cotton candy corner + lollipop bouquet -->
+    <div class="store-floor">
+      <div class="feature-row">
+        <div class="feature-panel">
+          <div class="store-panel-title">Cotton Candy</div>
+          <div class="cotton-icon-wrap" id="cottonIconWrap"></div>
+          <div class="jar-count-badge" id="cottonStoreBadge">0</div>
+        </div>
+        <div class="feature-panel">
+          <div class="store-panel-title">Lollipop Bouquet</div>
+          <div class="bouquet-container" id="bouquetContainer"></div>
+        </div>
+      </div>
+
+      <!-- Premium glass display case -->
+      <div class="store-panel">
+        <div class="store-panel-title">Premium Display Case</div>
+        <div class="display-case">
+          <div class="display-case-bar"></div>
+          <div class="shelf">
+            <div class="shelf-label">🎂 Birthday Cakes</div>
+            <div class="shelf-items" id="shelf-cake"></div>
+          </div>
+          <div class="shelf">
+            <div class="shelf-label">🍦 Ice Cream Sundaes</div>
+            <div class="shelf-items" id="shelf-sundae"></div>
+          </div>
+          <div class="shelf">
+            <div class="shelf-label">🍪 Ice Cream Sandwiches</div>
+            <div class="shelf-items" id="shelf-sandwich"></div>
+          </div>
+          <div class="display-case-bar"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Section 4: Glass Display Case -->
-    <div class="store-section">
-      <div class="store-section-title">🏆 Premium Display Case</div>
-      <div class="display-case">
-        <div class="shelf">
-          <div class="shelf-label">🎂 Cakes</div>
-          <div class="shelf-items" id="shelf-cake"></div>
-        </div>
-        <div class="shelf">
-          <div class="shelf-label">🍦 Sundaes</div>
-          <div class="shelf-items" id="shelf-sundae"></div>
-        </div>
-        <div class="shelf">
-          <div class="shelf-label">🍪 Sandwiches</div>
-          <div class="shelf-items" id="shelf-sandwich"></div>
-        </div>
-      </div>
+    <!-- Footer -->
+    <div class="store-footer">
+      <button class="back-btn" onclick="showGame()">← Back to Game</button>
+      <button class="reset-btn" onclick="resetCollection()">🗑️ Reset</button>
     </div>
 
-    <div style="margin-bottom:20px;">
-      <button class="reset-btn" onclick="resetCollection()">🗑️ Reset Candy Collection</button>
-    </div>
   </div><!-- /storePage -->
 
   <!-- Sugar Crush full-screen celebration -->
@@ -1683,15 +2185,43 @@
     }
 
     function updateCollection() {
+      // Update hidden count elements (still used for pulse animation targeting)
       ['gummy','skittle','mms','choc','sundae','marshmallow','cotton','sandwich','lollipop','cake'].forEach(k => {
-        document.getElementById('cnt-'+k).textContent = state.collection[k];
+        const el = document.getElementById('cnt-'+k);
+        if (el) el.textContent = state.collection[k];
       });
+      // Update mini progress bar on game page
       const progress = state.totalCorrect % 10;
       const justEarned = state.totalCorrect > 0 && progress === 0;
-      document.getElementById('cakeBar').style.width = (justEarned ? 100 : progress/10*100) + '%';
-      document.getElementById('cakeProgressLabel').textContent = justEarned
-        ? '🎂 You earned a Birthday Cake! 🎂'
-        : `${progress}/10 correct — ${10-progress} more for a birthday cake! 🎂`;
+      const pct = justEarned ? 100 : (progress / 10 * 100);
+      const barEl = document.getElementById('cakeBar');
+      const lblEl = document.getElementById('cakeProgressLabel');
+      if (barEl) barEl.style.width = pct + '%';
+      if (lblEl) lblEl.textContent = justEarned ? '🎂 Cake!' : `${progress}/10`;
+    }
+
+    const CLERK_MESSAGES = [
+      'Welcome, young mathematician!',
+      'Every answer fills a jar!',
+      'Streak of 9? That\'s a lollipop!',
+      'Wonka himself would be proud!',
+      '10 correct = Birthday Cake!',
+      'The sweetest shop in town!',
+      'Keep going, superstar!',
+      'Math tastes like candy here!',
+    ];
+
+    function updateClerkBubble() {
+      const el = document.getElementById('clerkBubble');
+      if (!el) return;
+      const total = Object.values(state.collection).reduce((a,b)=>a+b,0);
+      if (total === 0) {
+        el.textContent = 'Welcome! Earn candy by answering questions!';
+      } else if (state.streak >= 5) {
+        el.textContent = `Streak of ${state.streak}! You\'re on fire! 🔥`;
+      } else {
+        el.textContent = CLERK_MESSAGES[total % CLERK_MESSAGES.length];
+      }
     }
 
     // ── Answer Handling ─────────────────────────────────────────────────────
@@ -1975,6 +2505,8 @@
     }
 
     function renderStore() {
+      updateClerkBubble();
+
       // === Jars ===
       const jarRow = document.getElementById('jarRow');
       jarRow.innerHTML = '';
