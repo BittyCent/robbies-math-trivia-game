@@ -12,13 +12,26 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;700;900&display=swap');
 
+    /* ══ CSS Theme Variables — swapped by JS when world tier changes ══ */
+    :root {
+      /* Tier 0 defaults (Lollipop World — soft pastel candy-purple) */
+      --theme-bg:           #4a00e0;
+      --theme-card-bg:      rgba(255,255,255,0.96);
+      --theme-card-dot:     rgba(100,80,200,0.06);
+      --theme-q-color:      #4a4a8a;
+      --theme-badge-bg:     rgba(255,255,255,0.25);
+      --theme-badge-border: rgba(255,255,255,0.5);
+      --theme-h1-shadow:    #ff6b6b;
+    }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Nunito', sans-serif;
-      background: #4a00e0; /* canvas fallback */
+      background: var(--theme-bg); /* canvas fallback */
       min-height: 100vh;
       overflow-x: hidden;
+      transition: background-color 0.9s ease;
     }
 
     /* ── Candyland canvas background ── */
@@ -47,10 +60,11 @@
       font-family: 'Fredoka One', cursive;
       font-size: 2.8rem;
       color: #fff;
-      text-shadow: 3px 3px 0 #ff6b6b, 6px 6px 0 rgba(0,0,0,0.1);
+      text-shadow: 3px 3px 0 var(--theme-h1-shadow), 6px 6px 0 rgba(0,0,0,0.1);
       margin-bottom: 10px;
       text-align: center;
       animation: bounce 2s infinite;
+      transition: text-shadow 0.8s ease;
     }
 
     @keyframes bounce {
@@ -81,8 +95,8 @@
     }
 
     .badge {
-      background: rgba(255,255,255,0.25);
-      border: 3px solid rgba(255,255,255,0.5);
+      background: var(--theme-badge-bg);
+      border: 3px solid var(--theme-badge-border);
       border-radius: 20px;
       padding: 8px 18px;
       color: #fff;
@@ -91,13 +105,14 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      transition: background 0.8s ease, border-color 0.8s ease;
     }
 
     .badge span { font-size: 1.3rem; }
 
     .diff-badge {
-      background: rgba(255,255,255,0.25);
-      border: 3px solid rgba(255,255,255,0.5);
+      background: var(--theme-badge-bg);
+      border: 3px solid var(--theme-badge-border);
       border-radius: 20px;
       padding: 8px 18px;
       color: #fff;
@@ -115,8 +130,8 @@
 
     /* ── Question card ── */
     .question-card {
-      background: rgba(255,255,255,0.96);
-      background-image: radial-gradient(circle, rgba(100,80,200,0.06) 1px, transparent 1px);
+      background: var(--theme-card-bg);
+      background-image: radial-gradient(circle, var(--theme-card-dot) 1px, transparent 1px);
       background-size: 24px 24px;
       border-radius: 28px;
       padding: 36px 40px;
@@ -124,14 +139,16 @@
       box-shadow: 0 12px 40px rgba(0,0,0,0.22), inset 0 0 0 2px rgba(120,80,220,0.12);
       width: 100%;
       position: relative;
+      transition: background-color 0.8s ease;
     }
 
     .question-text {
       font-family: 'Fredoka One', cursive;
       font-size: 3.5rem;
-      color: #4a4a8a;
+      color: var(--theme-q-color);
       margin-bottom: 28px;
       line-height: 1.1;
+      transition: color 0.8s ease;
     }
 
     .choices {
@@ -1178,11 +1195,14 @@
   <!-- Candyland animated background canvas -->
   <canvas id="bgCanvas"></canvas>
 
+  <!-- FX particle overlay — pointer-events:none so clicks pass through -->
+  <canvas id="fxCanvas" style="position:fixed;inset:0;width:100%;height:100%;z-index:50;pointer-events:none;"></canvas>
+
   <!-- All game content sits above the canvas -->
   <div id="gameContent">
 
     <h1>Robbie's Math Game!</h1>
-    <div class="stars-bar">⭐⭐⭐⭐⭐</div>
+    <div class="stars-bar" id="starsBar">🍭🍭🍭🍭🍭</div>
 
     <div class="game-area">
 
@@ -1793,6 +1813,124 @@
       return a.map((v, i) => Math.round(v + (b[i] - v) * t));
     }
 
+    // ════════════════════════════════════════════════════════════════════════
+    // WORLD THEME SYSTEM  (3 tiers, triggered by totalCorrect thresholds)
+    // ════════════════════════════════════════════════════════════════════════
+    const WORLD_THEMES = [
+      {
+        // Tier 0 — Lollipop World (0–9 correct): soft candy-pastel
+        name: 'Lollipop World', icon: '🍭', metaColor: '#7b2ff7',
+        bgStops: [
+          [74,  0, 224], [150, 20, 255], [200, 30, 180],
+          [246, 79,  89], [180, 60, 240], [74, 0, 224],
+        ],
+        vars: {
+          '--theme-bg':           '#4a00e0',
+          '--theme-card-bg':      'rgba(255,255,255,0.96)',
+          '--theme-card-dot':     'rgba(100,80,200,0.06)',
+          '--theme-q-color':      '#4a4a8a',
+          '--theme-badge-bg':     'rgba(255,255,255,0.25)',
+          '--theme-badge-border': 'rgba(255,255,255,0.5)',
+          '--theme-h1-shadow':    '#ff6b6b',
+        },
+      },
+      {
+        // Tier 1 — Cake World (10–24 correct): rich chocolate & gold
+        name: 'Cake World', icon: '🎂', metaColor: '#7b3800',
+        bgStops: [
+          [45,  15,  0], [92,  42,  5], [148, 74, 14],
+          [198, 138, 40], [112, 56,  6], [45, 15, 0],
+        ],
+        vars: {
+          '--theme-bg':           '#3d1800',
+          '--theme-card-bg':      'rgba(253,238,210,0.97)',
+          '--theme-card-dot':     'rgba(140,70,10,0.08)',
+          '--theme-q-color':      '#3d1800',
+          '--theme-badge-bg':     'rgba(200,160,48,0.28)',
+          '--theme-badge-border': 'rgba(200,160,48,0.62)',
+          '--theme-h1-shadow':    '#c8900a',
+        },
+      },
+      {
+        // Tier 2 — Sundae World (25+ correct): strawberry & cream, night-mode
+        name: 'Sundae World', icon: '🍓', metaColor: '#aa0044',
+        bgStops: [
+          [18,  0,  38], [76,  0,  52], [158, 10,  78],
+          [222, 56, 112], [96,  0,  56], [18, 0, 38],
+        ],
+        vars: {
+          '--theme-bg':           '#1a0025',
+          '--theme-card-bg':      'rgba(28,0,20,0.94)',
+          '--theme-card-dot':     'rgba(255,80,130,0.09)',
+          '--theme-q-color':      '#ffe0f0',
+          '--theme-badge-bg':     'rgba(255,80,130,0.22)',
+          '--theme-badge-border': 'rgba(255,100,150,0.56)',
+          '--theme-h1-shadow':    '#ff4080',
+        },
+      },
+    ];
+
+    let currentWorldTier = -1;
+
+    function getWorldTier() {
+      if (state.totalCorrect >= 25) return 2;
+      if (state.totalCorrect >= 10) return 1;
+      return 0;
+    }
+
+    function applyWorldTheme(force) {
+      const tier = getWorldTier();
+      if (tier === currentWorldTier && !force) return;
+      const prevTier = currentWorldTier;
+      currentWorldTier = tier;
+      const theme = WORLD_THEMES[tier];
+
+      // Apply CSS vars to :root
+      Object.entries(theme.vars).forEach(([k, v]) =>
+        document.documentElement.style.setProperty(k, v));
+
+      // Swap meta theme-color
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', theme.metaColor);
+
+      // Mutate BG gradient stops in-place
+      BG_STOPS.splice(0, BG_STOPS.length, ...theme.bgStops);
+
+      // Update stars bar emoji
+      const sb = document.getElementById('starsBar');
+      if (sb) sb.textContent = theme.icon.repeat(5);
+
+      // Show "World Unlocked" banner on threshold crossing (not on initial load)
+      if (prevTier !== -1 && prevTier !== tier) showWorldTransition(theme);
+    }
+
+    function showWorldTransition(theme) {
+      const banner = document.createElement('div');
+      Object.assign(banner.style, {
+        position: 'fixed', top: '50%', left: '50%',
+        transform: 'translate(-50%,-50%) scale(0.5)',
+        background: 'linear-gradient(135deg,rgba(0,0,0,0.88),rgba(0,0,0,0.96))',
+        border: '3px solid ' + (WORLD_THEMES[currentWorldTier].vars['--theme-h1-shadow'] || '#fff'),
+        borderRadius: '20px', padding: '22px 44px', textAlign: 'center',
+        zIndex: '450', pointerEvents: 'none', opacity: '0',
+        boxShadow: '0 0 50px ' + (WORLD_THEMES[currentWorldTier].vars['--theme-h1-shadow'] || '#fff'),
+        transition: 'transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s',
+      });
+      banner.innerHTML =
+        `<div style="font-family:'Nunito',sans-serif;font-weight:900;font-size:0.85rem;color:rgba(255,255,255,0.65);letter-spacing:4px;text-transform:uppercase;margin-bottom:8px;">World Unlocked!</div>` +
+        `<div style="font-size:2.8rem;margin-bottom:4px;">${theme.icon}</div>` +
+        `<div style="font-family:'Fredoka One',cursive;font-size:1.9rem;color:#fff;">${theme.name}</div>`;
+      document.body.appendChild(banner);
+      requestAnimationFrame(() => {
+        banner.style.transform = 'translate(-50%,-50%) scale(1)';
+        banner.style.opacity = '1';
+      });
+      setTimeout(() => {
+        banner.style.opacity = '0';
+        banner.style.transform = 'translate(-50%,-50%) scale(0.85)';
+        setTimeout(() => banner.remove(), 380);
+      }, 2400);
+    }
+
     // Candy particle types and colors
     const CANDY_COLORS = [
       '#ff4da6','#ff2255','#ff9900','#ffdd00',
@@ -1945,6 +2083,140 @@
       requestAnimationFrame(bgAnimate);
     }
     bgAnimate();
+
+    // ════════════════════════════════════════════════════════════════════════
+    // FX CANVAS — BURST PARTICLE SYSTEM
+    // ════════════════════════════════════════════════════════════════════════
+    const fxCanvas = document.getElementById('fxCanvas');
+    const fxCtx    = fxCanvas.getContext('2d');
+
+    function resizeFx() {
+      fxCanvas.width  = window.innerWidth;
+      fxCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeFx);
+    resizeFx();
+
+    // Color palettes per world tier
+    const BURST_PALETTES = [
+      // Tier 0 — Lollipop: candy pinks, purples, yellows
+      ['#ff4da6','#aa44ff','#ffdd00','#00ccff','#ff2255','#ff8833','#cc44ff'],
+      // Tier 1 — Cake: chocolate browns, gold, warm cream
+      ['#c8900a','#f5d060','#8b4513','#d4a843','#ffe8b0','#ff9500','#c86000'],
+      // Tier 2 — Sundae: strawberry reds, cream pinks
+      ['#ff1155','#ff6699','#ffe0f0','#cc0040','#ffb3c8','#ff4488','#ff0077'],
+    ];
+
+    class BurstParticle {
+      constructor(cx, cy, tier) {
+        // Random spread from burst origin
+        this.x     = cx + (Math.random() - 0.5) * 80;
+        this.y     = cy + (Math.random() - 0.5) * 50;
+        this.tier  = tier;
+        const spd  = 3.5 + Math.random() * 9;
+        const ang  = Math.random() * Math.PI * 2;
+        this.vx    = Math.cos(ang) * spd;
+        this.vy    = Math.sin(ang) * spd - (2 + Math.random() * 5);
+        this.grav  = 0.22;
+        this.size  = 11 + Math.random() * 13;
+        this.rot   = Math.random() * Math.PI * 2;
+        this.rotV  = (Math.random() - 0.5) * 0.18;
+        this.alpha = 0.95;
+        this.fade  = 0.013 + Math.random() * 0.009;
+        const pal  = BURST_PALETTES[tier] || BURST_PALETTES[0];
+        this.color = pal[Math.floor(Math.random() * pal.length)];
+        this.alive = true;
+      }
+
+      update() {
+        this.vy += this.grav;
+        this.vx *= 0.992;
+        this.x  += this.vx;
+        this.y  += this.vy;
+        this.rot += this.rotV;
+        this.alpha -= this.fade;
+        if (this.alpha <= 0 || this.y > fxCanvas.height + 60) this.alive = false;
+      }
+
+      draw(ctx) {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rot);
+        const s = this.size;
+
+        if (this.tier === 0) {
+          // 🍭 Lollipop shape
+          ctx.strokeStyle = '#d4a870';
+          ctx.lineWidth   = Math.max(1.5, s * 0.13);
+          ctx.lineCap     = 'round';
+          ctx.beginPath(); ctx.moveTo(0, s * 0.35); ctx.lineTo(0, s * 0.95); ctx.stroke();
+          ctx.fillStyle = this.color;
+          ctx.beginPath(); ctx.arc(0, 0, s * 0.38, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.38)';
+          ctx.beginPath(); ctx.arc(-s * 0.1, -s * 0.1, s * 0.11, 0, Math.PI * 2); ctx.fill();
+
+        } else if (this.tier === 1) {
+          // ⭐ Gold star shape (Cake World)
+          const r1 = s * 0.46, r2 = s * 0.2;
+          ctx.fillStyle = this.color;
+          ctx.beginPath();
+          for (let i = 0; i < 10; i++) {
+            const r = i % 2 === 0 ? r1 : r2;
+            const a = (i / 10) * Math.PI * 2 - Math.PI / 2;
+            i === 0
+              ? ctx.moveTo(Math.cos(a) * r, Math.sin(a) * r)
+              : ctx.lineTo(Math.cos(a) * r, Math.sin(a) * r);
+          }
+          ctx.closePath(); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.3)';
+          ctx.beginPath(); ctx.arc(-r1 * 0.18, -r1 * 0.22, r1 * 0.18, 0, Math.PI * 2); ctx.fill();
+
+        } else {
+          // 🍒 Cherry shape (Sundae World)
+          ctx.strokeStyle = '#4a8800';
+          ctx.lineWidth   = Math.max(1.2, s * 0.1);
+          ctx.lineCap     = 'round';
+          ctx.beginPath();
+          ctx.moveTo(0, -s * 0.32);
+          ctx.quadraticCurveTo(s * 0.28, -s * 0.68, s * 0.08, -s * 0.88);
+          ctx.stroke();
+          ctx.fillStyle = this.color;
+          ctx.beginPath(); ctx.arc(0, 0, s * 0.38, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = 'rgba(255,255,255,0.35)';
+          ctx.beginPath(); ctx.arc(-s * 0.1, -s * 0.1, s * 0.12, 0, Math.PI * 2); ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    const burstParticles = [];
+    let   fxAnimId       = null;
+    const IS_MOBILE      = window.innerWidth < 600;
+
+    function triggerConfetti(tier) {
+      const cx    = fxCanvas.width  / 2;
+      const cy    = fxCanvas.height * 0.42;
+      const count = IS_MOBILE ? 20 : 32;
+      for (let i = 0; i < count; i++) burstParticles.push(new BurstParticle(cx, cy, tier));
+      if (!fxAnimId) fxLoop();
+    }
+
+    function fxLoop() {
+      fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+      for (let i = burstParticles.length - 1; i >= 0; i--) {
+        burstParticles[i].update();
+        burstParticles[i].draw(fxCtx);
+        if (!burstParticles[i].alive) burstParticles.splice(i, 1);
+      }
+      if (burstParticles.length > 0) {
+        fxAnimId = requestAnimationFrame(fxLoop);
+      } else {
+        fxAnimId = null;
+        fxCtx.clearRect(0, 0, fxCanvas.width, fxCanvas.height);
+      }
+    }
 
     // ════════════════════════════════════════════════════════════════════════
     // CANDY SVG ICONS (overlay size 80×80)
@@ -2173,6 +2445,7 @@
       document.getElementById('correctCount').textContent = state.totalCorrect;
       document.getElementById('streakFire').style.display = state.streak >= 2 ? 'block' : 'none';
       updateDiffBadge();
+      applyWorldTheme(false);
     }
 
     function pulseCandy(key) {
@@ -2238,7 +2511,11 @@
         btn.classList.add('correct');
         state.streak++; state.totalCorrect++; state.questionNum++;
         document.getElementById('feedback').textContent = getCorrectPhrase();
-        launchConfetti(14);
+
+        // Tier-specific candy burst (replaces plain confetti on correct answer)
+        triggerConfetti(getWorldTier());
+        // Apply theme immediately if a threshold was just crossed
+        applyWorldTheme(false);
 
         const reward = STREAK_REWARDS[Math.min(state.streak, 9)] || null;
         if (reward) { state.collection[reward.key]++; pulseCandy(reward.key); }
@@ -2461,6 +2738,7 @@
       if (!confirm('Reset all candy? This cannot be undone!')) return;
       state.collection = { gummy:0, skittle:0, mms:0, choc:0, sundae:0, marshmallow:0, cotton:0, sandwich:0, lollipop:0, cake:0 };
       state.streak = 0; state.totalCorrect = 0; state.questionNum = 1;
+      currentWorldTier = -1; // force theme reapplication
       document.getElementById('streakFire').style.display = 'none';
       updateDiffBadge(); updateCollection(); renderQuestion(); showGame();
     }
@@ -2621,6 +2899,7 @@
     }
 
     // ── Start ────────────────────────────────────────────────────────────────
+    applyWorldTheme(true); // sets Tier 0 vars and stars bar on load
     renderQuestion();
   </script>
 </body>
