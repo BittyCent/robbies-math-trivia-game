@@ -670,6 +670,264 @@
       .candy-list { grid-template-columns: repeat(3, 1fr); }
       .overlay-card { padding: 28px 24px; }
     }
+
+    /* ── Candy Store Page ── */
+    #storePage {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      width: 100%;
+      min-height: 100vh;
+      position: relative;
+      z-index: 1;
+      gap: 24px;
+    }
+
+    .store-header {
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .store-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.6rem;
+      color: #fff;
+      text-shadow: 3px 3px 0 #ff6b6b, 6px 6px 0 rgba(0,0,0,0.1);
+      text-align: center;
+      animation: bounce 2s infinite;
+    }
+
+    .store-section {
+      width: 100%;
+      max-width: 800px;
+    }
+
+    .store-section-title {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.5rem;
+      color: #fff;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+      margin-bottom: 14px;
+      text-align: center;
+    }
+
+    /* ── Candy Jars ── */
+    .jar-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      justify-content: center;
+    }
+
+    .jar-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .jar-svg { position: relative; }
+
+    .jar-count-badge {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1.1rem;
+      color: #fff;
+      background: rgba(0,0,0,0.45);
+      border: 2px solid rgba(255,255,255,0.5);
+      border-radius: 20px;
+      padding: 2px 12px;
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .jar-label {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.9rem;
+      color: rgba(255,255,255,0.9);
+      text-align: center;
+    }
+
+    .jar-card.jar-overflow .jar-svg::after {
+      content: '✨';
+      position: absolute;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.2rem;
+      animation: jarSparkle 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes jarSparkle {
+      0%   { transform: translateX(-50%) translateY(0) scale(0.8); opacity: 0.7; }
+      100% { transform: translateX(-50%) translateY(-8px) scale(1.2); opacity: 1; }
+    }
+
+    /* ── Cotton Candy Corner ── */
+    .cotton-corner {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 2px solid rgba(255,255,255,0.4);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .cotton-icon-wrap {
+      display: inline-block;
+      animation: iconFloat 2.6s ease-in-out infinite;
+      transform-origin: center center;
+      transition: transform 0.6s ease;
+    }
+
+    /* ── Lollipop Centerpiece ── */
+    .lollipop-centerpiece {
+      background: rgba(255,255,255,0.12);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 2px solid rgba(255,215,0,0.5);
+      border-radius: 24px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(255,215,0,0.2), 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    .bouquet-container {
+      position: relative;
+      width: 260px;
+      height: 200px;
+    }
+
+    .bouquet-container.sway {
+      animation: bouquetSway 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes bouquetSway {
+      from { transform: rotate(-3deg); }
+      to   { transform: rotate(3deg); }
+    }
+
+    .bouquet-lollipop {
+      position: absolute;
+      transform-origin: 50% 100%;
+    }
+
+    .lollipop-empty-label {
+      font-style: italic;
+      color: rgba(255,255,255,0.6);
+      font-size: 0.9rem;
+    }
+
+    .bouquet-overflow {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.85rem;
+      color: #fff;
+      background: rgba(255,100,0,0.7);
+      border-radius: 14px;
+      padding: 2px 10px;
+      position: absolute;
+      bottom: 62px;
+      right: 14px;
+    }
+
+    /* ── Glass Display Case ── */
+    .display-case {
+      background: rgba(20,10,50,0.5);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 2px solid rgba(255,255,255,0.25);
+      border-radius: 24px;
+      padding: 20px;
+      width: 100%;
+      overflow: hidden;
+    }
+
+    .shelf {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 0;
+    }
+
+    .shelf + .shelf {
+      border-top: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .shelf-label {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.8);
+      min-width: 80px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .shelf-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+      flex: 1;
+    }
+
+    .shelf-item {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .shelf-overflow {
+      font-family: 'Fredoka One', cursive;
+      font-size: 0.85rem;
+      color: #fff;
+      background: rgba(255,100,0,0.7);
+      border-radius: 14px;
+      padding: 3px 10px;
+    }
+
+    .shelf-empty {
+      font-style: italic;
+      color: rgba(255,255,255,0.4);
+      font-size: 0.85rem;
+    }
+
+    /* ── Store button on game page ── */
+    .store-btn {
+      font-family: 'Fredoka One', cursive;
+      font-size: 1rem;
+      padding: 10px 24px;
+      border: 2px solid rgba(255,215,0,0.7);
+      border-radius: 50px;
+      background: rgba(255,215,0,0.18);
+      color: #fff;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .store-btn:hover { background: rgba(255,215,0,0.35); transform: scale(1.05); }
+
+    @media (max-width: 480px) {
+      .store-title { font-size: 1.9rem; }
+      .jar-row { gap: 12px; }
+      .bouquet-container { width: 220px; }
+      .shelf-label { min-width: 58px; font-size: 0.75rem; }
+    }
   </style>
 </head>
 <body>
@@ -921,12 +1179,67 @@
         </div>
 
         <div style="text-align:center; margin-top:16px;">
-          <button class="reset-btn" onclick="resetCollection()">🗑️ Reset Candy Collection</button>
+          <button class="store-btn" onclick="showStore()">🍬 My Candy Store</button>
         </div>
       </div>
 
     </div>
   </div><!-- /gameContent -->
+
+  <!-- Candy Store Page -->
+  <div id="storePage">
+    <div class="store-header">
+      <div class="store-title">🍭 Robbie's Candy Store 🍭</div>
+      <button class="reset-btn" onclick="showGame()">← Back to Game</button>
+    </div>
+
+    <!-- Section 1: Candy Jars -->
+    <div class="store-section">
+      <div class="store-section-title">🫙 Candy Jars</div>
+      <div class="jar-row" id="jarRow"></div>
+    </div>
+
+    <!-- Section 2: Cotton Candy Corner -->
+    <div class="store-section">
+      <div class="store-section-title">🍬 Cotton Candy Corner</div>
+      <div class="cotton-corner">
+        <div class="cotton-icon-wrap" id="cottonIconWrap"></div>
+        <div class="jar-count-badge" id="cottonStoreBadge">0</div>
+        <div class="jar-label">Cotton Candies</div>
+      </div>
+    </div>
+
+    <!-- Section 3: Lollipop Centerpiece -->
+    <div class="store-section">
+      <div class="store-section-title">🍭 Lollipop Centerpiece</div>
+      <div class="lollipop-centerpiece">
+        <div class="bouquet-container" id="bouquetContainer"></div>
+      </div>
+    </div>
+
+    <!-- Section 4: Glass Display Case -->
+    <div class="store-section">
+      <div class="store-section-title">🏆 Premium Display Case</div>
+      <div class="display-case">
+        <div class="shelf">
+          <div class="shelf-label">🎂 Cakes</div>
+          <div class="shelf-items" id="shelf-cake"></div>
+        </div>
+        <div class="shelf">
+          <div class="shelf-label">🍦 Sundaes</div>
+          <div class="shelf-items" id="shelf-sundae"></div>
+        </div>
+        <div class="shelf">
+          <div class="shelf-label">🍪 Sandwiches</div>
+          <div class="shelf-items" id="shelf-sandwich"></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <button class="reset-btn" onclick="resetCollection()">🗑️ Reset Candy Collection</button>
+    </div>
+  </div><!-- /storePage -->
 
   <!-- Sugar Crush full-screen celebration -->
   <div id="sugarCrush">
@@ -1619,7 +1932,160 @@
       state.collection = { gummy:0, skittle:0, mms:0, choc:0, sundae:0, marshmallow:0, cotton:0, sandwich:0, lollipop:0, cake:0 };
       state.streak = 0; state.totalCorrect = 0; state.questionNum = 1;
       document.getElementById('streakFire').style.display = 'none';
-      updateDiffBadge(); updateCollection(); renderQuestion();
+      updateDiffBadge(); updateCollection(); renderQuestion(); showGame();
+    }
+
+    // ── Store Page ────────────────────────────────────────────────────────────
+    function showStore() {
+      document.getElementById('gameContent').style.display = 'none';
+      document.getElementById('storePage').style.display = 'flex';
+      renderStore();
+    }
+
+    function showGame() {
+      document.getElementById('storePage').style.display = 'none';
+      document.getElementById('gameContent').style.display = 'flex';
+    }
+
+    const JAR_CANDIES = [
+      { key:'gummy',       label:'Gummy Bears',  fill:'#f7a800' },
+      { key:'skittle',     label:'Skittles',     fill:'#e8439a' },
+      { key:'mms',         label:'M&Ms',         fill:'#f7c020' },
+      { key:'choc',        label:'Chocolates',   fill:'#6b3000' },
+      { key:'marshmallow', label:'Marshmallows', fill:'#ffd6ec' },
+    ];
+
+    function buildJarSVG(key, count, fillColor) {
+      const MAX_JAR = 10;
+      const pct   = Math.min(count, MAX_JAR) / MAX_JAR;
+      const fillH = Math.round(pct * 83);
+      const fillY = 118 - fillH;
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 130" width="90" height="130">
+        <defs>
+          <clipPath id="jclip-${key}">
+            <path d="M16 30 Q14 28 14 26 L14 22 Q14 20 16 20 L74 20 Q76 20 76 22 L76 26 Q76 28 74 30 L74 118 Q74 122 70 122 L20 122 Q16 122 16 118 Z"/>
+          </clipPath>
+        </defs>
+        <rect x="16" y="${fillY}" width="58" height="${fillH}" fill="${fillColor}" clip-path="url(#jclip-${key})"/>
+        <path d="M16 30 Q14 28 14 26 L14 22 Q14 20 16 20 L74 20 Q76 20 76 22 L76 26 Q76 28 74 30 L74 118 Q74 122 70 122 L20 122 Q16 122 16 118 Z" fill="rgba(200,230,255,0.18)" stroke="rgba(255,255,255,0.75)" stroke-width="2"/>
+        <rect x="10" y="14" width="70" height="10" rx="4" fill="#b0b8c8"/>
+        <rect x="12" y="14" width="66" height="4" rx="2" fill="rgba(255,255,255,0.4)"/>
+        <rect x="19" y="32" width="8" height="80" rx="4" fill="rgba(255,255,255,0.18)"/>
+      </svg>`;
+    }
+
+    function renderStore() {
+      // === Jars ===
+      const jarRow = document.getElementById('jarRow');
+      jarRow.innerHTML = '';
+      JAR_CANDIES.forEach(({ key, label, fill }) => {
+        const count = state.collection[key] || 0;
+        const card = document.createElement('div');
+        card.className = 'jar-card' + (count > 10 ? ' jar-overflow' : '');
+        card.innerHTML = `
+          <div class="jar-svg">${buildJarSVG(key, count, fill)}</div>
+          <div class="jar-count-badge">${count}</div>
+          <div class="jar-label">${label}</div>`;
+        jarRow.appendChild(card);
+      });
+
+      // === Cotton Candy ===
+      const cottonCount = state.collection.cotton || 0;
+      const scale = (0.5 + Math.min(cottonCount, 15) * (1.0 / 15)).toFixed(2);
+      const cottonWrap = document.getElementById('cottonIconWrap');
+      cottonWrap.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="150" height="150">
+        <defs><radialGradient id="st-cc2" cx="45%" cy="40%" r="60%"><stop offset="0%" stop-color="#ffb8e8"/><stop offset="100%" stop-color="#a020c0"/></radialGradient></defs>
+        <rect x="26" y="40" width="8" height="20" rx="4" fill="#e8c09a"/>
+        <rect x="27" y="40" width="3" height="20" rx="1.5" fill="rgba(255,255,255,0.3)"/>
+        <circle cx="30" cy="29" r="15" fill="url(#st-cc2)" opacity="0.9"/>
+        <circle cx="17" cy="32" r="11" fill="url(#st-cc2)" opacity="0.88"/>
+        <circle cx="43" cy="32" r="11" fill="url(#st-cc2)" opacity="0.88"/>
+        <circle cx="21" cy="21" r="10" fill="url(#st-cc2)" opacity="0.88"/>
+        <circle cx="39" cy="21" r="10" fill="url(#st-cc2)" opacity="0.88"/>
+        <circle cx="30" cy="17" r="10" fill="url(#st-cc2)" opacity="0.92"/>
+        <circle cx="23" cy="19" r="5" fill="rgba(255,255,255,0.35)"/>
+        <circle cx="37" cy="15" r="3.5" fill="rgba(255,255,255,0.45)"/>
+      </svg>`;
+      cottonWrap.style.transform = `scale(${scale})`;
+      document.getElementById('cottonStoreBadge').textContent = cottonCount;
+
+      // === Lollipop Bouquet ===
+      const loliCount = state.collection.lollipop || 0;
+      const bouquet = document.getElementById('bouquetContainer');
+      bouquet.innerHTML = '';
+      bouquet.classList.toggle('sway', loliCount > 0);
+
+      // Vase at bottom center
+      const vase = document.createElement('div');
+      vase.style.cssText = 'position:absolute;bottom:0;left:50%;transform:translateX(-50%);';
+      vase.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 60" width="80" height="60">
+        <path d="M15 10 L65 10 L72 58 L8 58 Z" fill="rgba(200,230,255,0.35)" stroke="rgba(255,255,255,0.6)" stroke-width="2"/>
+        <rect x="10" y="6" width="60" height="10" rx="4" fill="rgba(200,230,255,0.5)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
+        <path d="M18 18 L16 56" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3" stroke-linecap="round"/>
+      </svg>`;
+      bouquet.appendChild(vase);
+
+      if (loliCount === 0) {
+        const lbl = document.createElement('div');
+        lbl.className = 'lollipop-empty-label';
+        lbl.style.cssText = 'position:absolute;top:12px;width:100%;text-align:center;';
+        lbl.textContent = 'Earn at streak 9!';
+        bouquet.appendChild(lbl);
+      } else {
+        const visible = Math.min(loliCount, 8);
+        for (let i = 0; i < visible; i++) {
+          const angle = visible === 1 ? 0 : -40 + (i / (visible - 1)) * 80;
+          const loliDiv = document.createElement('div');
+          loliDiv.className = 'bouquet-lollipop';
+          loliDiv.style.cssText = `bottom:58px;left:calc(50% - 24px);transform:rotate(${angle}deg);`;
+          loliDiv.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="48" height="48">
+            <rect x="27" y="37" width="6" height="23" rx="3" fill="#e8c09a"/>
+            <rect x="28" y="37" width="2.5" height="23" rx="1.2" fill="rgba(255,255,255,0.3)"/>
+            <circle cx="30" cy="25" r="22" fill="#ff2255"/>
+            <path d="M30 25 L30 3 A22 22 0 0 1 49.05 36 Z" fill="#ff8800"/>
+            <path d="M30 25 L49.05 36 A22 22 0 0 1 10.95 36 Z" fill="#ffdd00"/>
+            <path d="M30 25 L10.95 36 A22 22 0 0 1 30 3 Z" fill="#ff2255"/>
+            <circle cx="30" cy="25" r="22" fill="none" stroke="rgba(0,0,0,0.12)" stroke-width="1.5"/>
+            <ellipse cx="21" cy="15" rx="9" ry="5" fill="rgba(255,255,255,0.42)" transform="rotate(-30,21,15)"/>
+            <circle cx="39" cy="13" r="3.5" fill="rgba(255,255,255,0.52)"/>
+          </svg>`;
+          bouquet.appendChild(loliDiv);
+        }
+        if (loliCount > 8) {
+          const overflow = document.createElement('div');
+          overflow.className = 'bouquet-overflow';
+          overflow.textContent = `+${loliCount - 8} more`;
+          bouquet.appendChild(overflow);
+        }
+      }
+
+      // === Display Case Shelves ===
+      renderShelf('cake',     state.collection.cake     || 0);
+      renderShelf('sundae',   state.collection.sundae   || 0);
+      renderShelf('sandwich', state.collection.sandwich || 0);
+    }
+
+    function renderShelf(key, count) {
+      const el = document.getElementById('shelf-' + key);
+      el.innerHTML = '';
+      if (count === 0) {
+        el.innerHTML = '<span class="shelf-empty">none yet</span>';
+        return;
+      }
+      const visible = Math.min(count, 8);
+      const svgHtml = CANDY_ICONS[key].replace(/width="80" height="80"/, 'width="40" height="40"');
+      for (let i = 0; i < visible; i++) {
+        const item = document.createElement('div');
+        item.className = 'shelf-item';
+        item.innerHTML = svgHtml;
+        el.appendChild(item);
+      }
+      if (count > 8) {
+        const badge = document.createElement('div');
+        badge.className = 'shelf-overflow';
+        badge.textContent = `+${count - 8} more`;
+        el.appendChild(badge);
+      }
     }
 
     // ── Start ────────────────────────────────────────────────────────────────
